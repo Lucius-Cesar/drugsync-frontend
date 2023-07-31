@@ -4411,6 +4411,14 @@ metro-core@0.76.7:
     lodash.throttle "^4.1.1"
     metro-resolver "0.76.7"
 
+metro-core@^0.77.0:
+  version "0.77.0"
+  resolved "https://registry.yarnpkg.com/metro-core/-/metro-core-0.77.0.tgz#ad496d3ac50332f1c8be16b8c78847bbc61c896c"
+  integrity sha512-352kpZvPAQUEiUn6nh/bq/eO1jRkZyVoRAy3UtIN+K5B3UQoAFHjZgxvJxXtYRDIgOpC1Nx/oTPI0I/LREq3mQ==
+  dependencies:
+    lodash.throttle "^4.1.1"
+    metro-resolver "0.77.0"
+
 metro-file-map@0.76.7:
   version "0.76.7"
   resolved "https://registry.yarnpkg.com/metro-file-map/-/metro-file-map-0.76.7.tgz#0f041a4f186ac672f0188180310609c8483ffe89"
@@ -4516,6 +4524,11 @@ metro-resolver@0.76.7:
   version "0.76.7"
   resolved "https://registry.yarnpkg.com/metro-resolver/-/metro-resolver-0.76.7.tgz#f00ebead64e451c060f30926ecbf4f797588df52"
   integrity sha512-pC0Wgq29HHIHrwz23xxiNgylhI8Rq1V01kQaJ9Kz11zWrIdlrH0ZdnJ7GC6qA0ErROG+cXmJ0rJb8/SW1Zp2IA==
+
+metro-resolver@0.77.0:
+  version "0.77.0"
+  resolved "https://registry.yarnpkg.com/metro-resolver/-/metro-resolver-0.77.0.tgz#765cd6cbffa6fb9589807b30c7922720d0cf7291"
+  integrity sha512-h3rvDWD25cZ/5Iin6mPjSQQe8KtWPAHZnA6AnAj2yadzltkyytPjmHal6JhTPsVHWMKorkC03MUpEgGusuvTww==
 
 metro-runtime@0.76.7:
   version "0.76.7"
