@@ -1,5 +1,6 @@
 import {SafeAreaView, View,Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Subscription from '../components/Subscription';
+import { useState } from 'react';
 
 const styles = StyleSheet.create({
     screen: {
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
-        justifyContent:"center"
+        justifyContent:"center",
     },
     payButtonContainer:{
         flex:1,
@@ -49,7 +50,18 @@ const styles = StyleSheet.create({
     fontWeight: "600"}
 
 })
+
+
+
 export default function SubscriptionScreen(){
+
+    const [selectedSubscriptionIndex, setSelectedSubscriptionIndex] = useState(null);
+
+  const handleSubscriptionPress = (index) => {
+    setSelectedSubscriptionIndex(index);
+  };
+
+
     const subscriptionsData = [
         {
             title: "14 days trial",
@@ -71,7 +83,19 @@ export default function SubscriptionScreen(){
     ]
 
     const subscriptions = subscriptionsData.map((data, i) => {
-        return <Subscription key={i} title={data.title} description = {data.description}/>;
+        return (
+            <TouchableOpacity
+              key={i}
+              onPress={() => handleSubscriptionPress(i)}
+              style={
+                i === selectedSubscriptionIndex
+                  ? { ...styles.subscriptionItem, backgroundColor: '#82D2CB', borderRadius: 10, }
+                  : styles.subscriptionItem
+              }
+            >
+              <Subscription title={data.title} description={data.description} />
+            </TouchableOpacity>
+          );
        });
 return(
 <SafeAreaView style={styles.screen}>
