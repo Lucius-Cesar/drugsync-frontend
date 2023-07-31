@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login} from '../reducers/user'
 import {Animated, View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 const ModalPopup = ({visible, children}) => {
   const [showModal, setShowModal] = useState(visible);
+
   const scaleValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     toggleModal();
@@ -40,7 +43,64 @@ const ModalPopup = ({visible, children}) => {
 
 export default function LoginScreen({ navigation }){
 
+  const dispatch = useDispatch();
+
+  //login states
   const [visible, setVisible] = useState(false)
+  const [signInEmail, setSignInEmail] = useState('');
+  const [signInPassword, setSignInPassword] = useState('');
+
+   //sign Up states
+   const [signUpEmail, setSignUpEmail] = useState('')
+   const [signUpFirstName, setSignUpFirstName] = useState('')
+   const [signUpLastName, setSignUpLastName] = useState('')
+   const [signUpPassword, setsignUpPassword] = useState('')
+   const [signUpAdress, setSignUpAdress] = useState('')
+   const [signUpProfession, setSignUpProfession] = useState('')
+
+  // Detect email incorrect format
+  const [emailError, setEmailError] = useState(false);
+  const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+  function handleLoginButton(){
+    const emailExample = "didierraoult@chumarseille.com"
+    const passwordExample = "hydroxychloroquine"
+
+    if(EMAIL_REGEX.test(signInEmail)){
+      if(signInEmail === emailExample && signInPassword === passwordExample){
+
+        dispatch(login({ email: signInEmail, token: "tokenAuPif" }));   
+        navigation.navigate('TabNavigator')
+        console.log("Didier raoult is connected")
+        setSignInEmail("")
+        setSignInPassword("")
+        }
+        else{
+          console.log("it is not didier")
+        }
+      }
+    else{
+      setEmailError(true);
+    }
+  }
+
+  function handleCreateAccountButton(){
+    if(EMAIL_REGEX.test(signInEmail)){
+      dispatch(login({ email: signUpEmail, token: "tokenAuPif" }));   
+      console.log(`${signUpFirstName} ${signUpLastName} account is now created and logged in`)
+      setSignUpEmail("")    
+      setSignUpLastName("")
+      setsignUpPassword("")
+      setSignUpAdress("")
+      setSignUpProfession("")
+      setVisible(false)
+      navigation.navigate('TabNavigator')
+    }
+    else{
+      setEmailError(true);
+    }
+  }
 
 return(
 <View style={styles.container}>
@@ -49,11 +109,26 @@ return(
         <Text style={styles.logoTitle}>DrugSync</Text>
     </View>
     <View style={styles.inputContainer}>
-        <TextInput placeholder='Email' placeholderTextColor="rgba(0,0,0,0.5)" style={styles.inputMail}></TextInput>
-        <TextInput placeholder='Password' placeholderTextColor="rgba(0,0,0,0.5)" style={styles.inputPassword}></TextInput>
+        <TextInput 
+          placeholder='Email' 
+          placeholderTextColor="rgba(0,0,0,0.5)" 
+          style={styles.inputMail} 
+          onChangeText = {value => setSignInEmail(value)}
+          value = {signInEmail}
+        ></TextInput>
+    
+        {emailError && <Text style={styles.error}>Invalid email address</Text>}
+
+        <TextInput 
+          placeholder='Password' 
+          placeholderTextColor="rgba(0,0,0,0.5)" 
+          style={styles.inputPassword} 
+          onChangeText = {value => setSignInPassword(value)}
+          value = {signInPassword}>
+        </TextInput>
     </View>
     <View style={styles.btnContainer}>
-    <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate('TabNavigator')}>
+    <TouchableOpacity style={styles.loginBtn} onPress={() => handleLoginButton()}>
           <Text style={styles.loginTextBtn}>Login</Text>
         </TouchableOpacity>
 
@@ -65,26 +140,53 @@ return(
               </View>
             </View>
             <View style={styles.inputContainer}>
-            <Text style={styles.modalText}>Firstname</Text>
-            <TextInput style={styles.modalInput}></TextInput>
-            <Text style={styles.modalText}>Lastname</Text>
-            <TextInput style={styles.modalInput}></TextInput>
-            <Text style={styles.modalText}>Mail</Text>
-            <TextInput style={styles.modalInput}></TextInput>
-            <Text style={styles.modalText}>Password</Text>
-            <TextInput style={styles.modalInput}></TextInput>
-            <Text style={styles.modalText}>Adress</Text>
-            <TextInput style={styles.modalInput}></TextInput>
-            <Text style={styles.modalText}>Profession</Text>
-            <TextInput style={styles.modalInput}></TextInput>
+              <Text style={styles.modalText}>Firstname</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setSignUpFirstName(value)}
+                value = {signUpFirstName}>
+              </TextInput>
+              <Text style={styles.modalText}>Lastname</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setSignUpLastName(value)}
+                value = {signUpLastName}>
+              </TextInput>
+              <Text style={styles.modalText}>Mail</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setSignUpEmail(value)}
+                value = {signUpEmail}>
+              </TextInput>
+              {emailError && <Text style={styles.error}>Invalid email address</Text>}
+              <Text style={styles.modalText}>Password</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setsignUpPassword(value)}
+                value = {signUpPassword}>
+              </TextInput>
+              <Text style={styles.modalText}>Adress</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setSignUpAdress(value)}
+                value = {signUpAdress}>
+              </TextInput>
+              <Text style={styles.modalText}>Profession</Text>
+              <TextInput 
+                style={styles.modalInput}
+                onChangeText = {value => setSignUpProfession(value)}
+                value = {signUpProfession}>
+              </TextInput>
             </View>
             <View style={styles.modalBtnContainer}>
-            <TouchableOpacity style={styles.modalCreateBtn} onPress={() => setVisible(false)}>
-                <Text style={styles.modalCreateText}>Create</Text>
+            <TouchableOpacity 
+              style={styles.modalCreateBtn} 
+              onPress={() => handleCreateAccountButton()}>
+              <Text style={styles.modalCreateText}>Create</Text>
             </TouchableOpacity>
             </View>
           </ModalPopup>
-          <Text style={styles.createTextBtn} onPress={() => setVisible(true)}>Create Account</Text>
+          <Text style={styles.createTextBtn} onPress={() => setVisible(true)}>Sign Up</Text>
         </TouchableOpacity>
     </View>
 </View>
@@ -226,4 +328,8 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       
     },
+    error: {
+      margin: 10,
+      color: 'red',
+    }
   });
