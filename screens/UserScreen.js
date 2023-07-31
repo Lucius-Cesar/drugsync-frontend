@@ -1,9 +1,9 @@
 import {View } from 'react-native';
 
 export default function UserScreen(){
-return(
-    <View>
+return(    
+<View>
 
-    </View>
+</View>
 )
 }
