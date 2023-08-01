@@ -59,7 +59,9 @@ export default function LoginScreen({ navigation }){
    const [signUpProfession, setSignUpProfession] = useState('')
 
   // Detect email incorrect format
-  const [emailError, setEmailError] = useState(false);
+  const [emailSignInError, setSignInEmailError] = useState(false);
+  const [signUpEmailError, setSignUpEmailError] = useState(false);
+
   const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
@@ -81,7 +83,7 @@ export default function LoginScreen({ navigation }){
         }
       }
     else{
-      setEmailError(true);
+      setSignInEmailError(true);
     }
   }
 
@@ -98,7 +100,7 @@ export default function LoginScreen({ navigation }){
       navigation.navigate('TabNavigator')
     }
     else{
-      setEmailError(true);
+      setSignUpEmailError(true);
     }
   }
 
@@ -108,23 +110,30 @@ return(
         <Image source={require('../assets/logo.png')} style={styles.logoImg}></Image>
         <Text style={styles.logoTitle}>DrugSync</Text>
     </View>
-    <View style={styles.inputContainer}>
+
+    <View>
         <TextInput 
           placeholder='Email' 
           placeholderTextColor="rgba(0,0,0,0.5)" 
-          style={styles.inputMail} 
+          style={styles.inputMail}
+          autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+          keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+          extContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
+          autoComplete="email"
           onChangeText = {value => setSignInEmail(value)}
           value = {signInEmail}
         ></TextInput>
     
-        {emailError && <Text style={styles.error}>Invalid email address</Text>}
+        {emailSignInError && <Text style={styles.error}>Invalid email address</Text>}
 
         <TextInput 
           placeholder='Password' 
           placeholderTextColor="rgba(0,0,0,0.5)" 
           style={styles.inputPassword} 
           onChangeText = {value => setSignInPassword(value)}
-          value = {signInPassword}>
+          value = {signInPassword}
+          textContentType = "password"
+          secureTextEntry={true}>
         </TextInput>
     </View>
     <View style={styles.btnContainer}>
@@ -156,14 +165,21 @@ return(
               <TextInput 
                 style={styles.modalInput}
                 onChangeText = {value => setSignUpEmail(value)}
-                value = {signUpEmail}>
+                value = {signUpEmail}
+                autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+                keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+                extContentType="emailAddress" // https://reactnative.dev/docs/textinput#textcontenttype-ios
+                >
+                  
               </TextInput>
-              {emailError && <Text style={styles.error}>Invalid email address</Text>}
+              {signUpEmailError && <Text style={styles.error}>Invalid email address</Text>}
               <Text style={styles.modalText}>Password</Text>
               <TextInput 
                 style={styles.modalInput}
                 onChangeText = {value => setsignUpPassword(value)}
-                value = {signUpPassword}>
+                value = {signUpPassword}
+                textContentType = "password"
+                secureTextEntry={true}>
               </TextInput>
               <Text style={styles.modalText}>Adress</Text>
               <TextInput 
