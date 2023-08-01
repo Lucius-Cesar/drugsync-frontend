@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
       </View>
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("Subscription")}
           style={styles.buttonSubscription}
         >
           <Text style={styles.subscriptionText}> 1 Year Subscription </Text>
