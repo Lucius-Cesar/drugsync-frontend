@@ -1,10 +1,8 @@
 {
-  "urlRandomness": "WrPquo0",
+  "urlRandomness": "l-bvEvA",
   "dev": true,
   "minify": false,
   "https": false,
   "hostType": "tunnel",
-  "lanType": "ip",
-  "scheme": null,
-  "devClient": false
+  "lanType": "ip"
 }

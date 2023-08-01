@@ -8,8 +8,16 @@ import {
   Button,
   handlePress,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { logout } from "../reducers/user";
 
-export default function LoginScreen({ navigation }) {
+export default function UserScreen({ navigation }) {
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logout);
+    navigation.navigate("Login");
+  }
   return (
     <View style={styles.container}>
       <View style={styles.userContainer}>
@@ -44,7 +52,7 @@ export default function LoginScreen({ navigation }) {
       <TouchableOpacity style={styles.buttonHelp}>
         <Text style={styles.subscriptionText}> Help</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonOut}>
+      <TouchableOpacity style={styles.buttonOut} onPress={handleLogout}>
         <Text style={styles.subscriptionText}> Log Out</Text>
       </TouchableOpacity>
     </View>
