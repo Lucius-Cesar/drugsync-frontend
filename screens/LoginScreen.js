@@ -74,6 +74,10 @@ export default function LoginScreen({ navigation }) {
   const EMAIL_REGEX =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+  //Redux
+  const dispatch = useDispatch();
+
+  
   function handleSignIn() {
     fetch("https://drugsync-backend.vercel.app/users/signin", {
       method: "POST",

@@ -1,6 +1,5 @@
-import {View, Text, TextInput, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useState } from 'react';
 import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
 
@@ -17,7 +16,7 @@ export default function TreatmentScreen() {
     ]
     const treatment = treatmentData.map((data, i) => {
         return (
-              <Treatment name={data.name}/>
+              <Treatment key={i} name={data.name}/>
           );
        });
 
@@ -28,7 +27,7 @@ export default function TreatmentScreen() {
     ]
     const pathology = pathologyData.map((data, i) => {
             return (
-                  <Pathology name={data.name}/>
+                  <Pathology key={i} name={data.name}/>
               );
            });
     return(

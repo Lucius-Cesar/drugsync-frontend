@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import SubscriptionScreen from './screens/SubscriptionScreen';
-import TreatmentScreen from './screens/TreatmentScreen';
+import InteractionScreen from './screens/InteractionScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // Redux Setup
 import { Provider} from 'react-redux';
