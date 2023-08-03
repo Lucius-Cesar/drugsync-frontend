@@ -3,6 +3,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import InteractionContainer from '../components/InteractionContainer';
 import { useState } from 'react';
 import OpenButton from '../components/OpenButton';
+import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
 
 
 export default function InteractionScreen() {
@@ -23,27 +24,9 @@ export default function InteractionScreen() {
             </View>
             <ScrollView style={styles.scrollViewTreatment}>
                 <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
-                <OpenButton/>
             </ScrollView>
             <Text style={styles.searchText}>Searched: <Text style={styles.searchedText}>Infliximab</Text></Text>
             <ScrollView style={styles.scrollViewSearched}>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
-                    <OpenButton/>
                     <OpenButton/>
             </ScrollView>
         </View>

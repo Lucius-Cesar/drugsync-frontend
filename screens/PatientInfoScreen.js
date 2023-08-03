@@ -1,4 +1,4 @@
-import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -92,6 +92,7 @@ export default function TreatmentScreen() {
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Patient current treatment</Text>
             </View>
+            <ScrollView style={styles.scrollViewTreatment}>
                 {treatment}
             <View style={styles.addContainer}>
                 <TextInput placeholder='Add drug name here'
@@ -102,9 +103,11 @@ export default function TreatmentScreen() {
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Pathologies</Text>
             </View>
+            <ScrollView style={styles.scrollViewTreatment}>
                 {pathologies}
             <View style={styles.addContainer}>
                 <TextInput placeholder='Add pathology name here'
@@ -115,6 +118,7 @@ export default function TreatmentScreen() {
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
             <View style={styles.validateContainer}>
                 <TouchableOpacity style={styles.validate}>
                     <Text style={styles.validateText}>Validate</Text>
@@ -150,6 +154,7 @@ const styles = StyleSheet.create({
     addContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginTop: 10,
         marginBottom: 10,
         marginLeft: 20,
     },
@@ -187,5 +192,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: "#057B6C",
         fontWeight: "600"
+    },
+    scrollViewTreatment: {
+        height: '75%',
         },
 });
