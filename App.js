@@ -11,9 +11,10 @@ import { Provider} from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import UserScreen from './screens/UserScreen';
 import user from './reducers/user';
+import patient from './reducers/patient';
 
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, patient},
 });
 
 // Navigation setp
