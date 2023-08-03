@@ -1,31 +1,85 @@
 import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
+import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
+
+
+
+
 
 export default function TreatmentScreen() {
+    
+    //Input states
+    const [addDrugInput, setAddDrugInput] = useState("")
+    const [addPathologyInput, setAddPathologyInput] = useState("")
 
-    const treatmentData = [
-        {
-            name: "Paracétamol",
-        },{
-            name: "Aspirin",
-        },{
-            name: "Tramadol",
+    //Redux
+    const dispatch = useDispatch()
+    const patient = useSelector((state) => state.patient.value);
+
+    useEffect(() => {
+        dispatch(loadPatientInfo(patientPayload))
+        },
+        []
+      )
+
+    const patientPayload = { //simulating patients DB
+        currentTreatment: [{
+            name: "Infliximab",
+            rxcui: "191831"
+        }],
+        pathologies : [
+            {
+                name: "Polyarthrite Rheumatoïde",
+            }
+        ]
+    }
+    function handleAddDrugButton(){
+
+        fetch("https://drugsync-backend.vercel.app/drugs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            drug: addDrugInput,
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.result){
+            console.log("yes")
+            const drugPayload = {
+                name: data.drugData.name,
+                rxcui: data.drugData.rxNav[0].rxcui
+            }
+            dispatch(addDrugToCurrentTreatment(drugPayload))
         }
-    ]
-    const treatment = treatmentData.map((data, i) => {
+        else{
+            console.log("nop")
+            console.log(data.error) // later: display the error directly to the frend with a drugInputError state
+        }
+    })
+    }    
+    
+    const treatment = patient.currentTreatment.map((data, i) => {
         return (
               <Treatment key={i} name={data.name}/>
           );
        });
 
-       const pathologyData = [
-        {
-            name: "Polyarthrite Rhumatoïde",
-        }
-    ]
-    const pathology = pathologyData.map((data, i) => {
+       function handleAddPathologyButton(){
+            const pathologyPayload = {
+                name: addPathologyInput
+            }
+            dispatch(addPathology(pathologyPayload))
+       }
+
+
+    const pathologies = patient.pathologies.map((data, i) => {
             return (
                   <Pathology key={i} name={data.name}/>
               );
@@ -40,18 +94,24 @@ export default function TreatmentScreen() {
             </View>
                 {treatment}
             <View style={styles.addContainer}>
-                <TextInput placeholder='Add' style={styles.inputText}></TextInput>
-                <TouchableOpacity>
+                <TextInput placeholder='Add drug name here'
+                 style={styles.inputText} 
+                 onChangeText = {value => setAddDrugInput(value)}
+                 value = {addDrugInput} />
+                <TouchableOpacity onPress = {handleAddDrugButton}>
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
             </View>
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Pathologies</Text>
             </View>
-                {pathology}
+                {pathologies}
             <View style={styles.addContainer}>
-                <TextInput placeholder='Add' style={styles.inputText}></TextInput>
-                <TouchableOpacity>
+                <TextInput placeholder='Add pathology name here'
+                 style={styles.inputText} 
+                 onChangeText = {value => setAddPathologyInput(value)}
+                 value = {addPathologyInput} />
+                <TouchableOpacity onPress = {handleAddPathologyButton}>
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
             </View>

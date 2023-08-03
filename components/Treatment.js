@@ -1,8 +1,19 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useDispatch} from 'react-redux'
+import { removeDrugFromCurrentTreatment } from '../reducers/patient';
 
 
 export default function Treatment(props){
+    //redux
+
+    const dispatch = useDispatch()
+
+    function handleRemoveDrugButton(){
+        dispatch(removeDrugFromCurrentTreatment(props.name))
+        //Later: makes changes actives in the patient collection
+    }
+
     return(    
     <View style = {styles.container}>
         <View style = {styles.textContainer}>
@@ -10,7 +21,7 @@ export default function Treatment(props){
                 {props.name}
             </Text>
         </View>
-        <TouchableOpacity style={styles.circle}>
+        <TouchableOpacity style={styles.circle} onPress = {handleRemoveDrugButton}>
             <FontAwesome name='times' size={12} color={'white'} />
         </TouchableOpacity>
     </View>
