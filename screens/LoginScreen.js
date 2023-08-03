@@ -83,7 +83,7 @@ export default function LoginScreen({ navigation }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: signInEmail,
+        mail: signInEmail,
         password: signInPassword,
       }),
     })
@@ -93,10 +93,12 @@ export default function LoginScreen({ navigation }) {
           dispatch(login({ email: signInEmail, token: data.token }));
           setSignInEmail("");
           setSignInPassword("");
-          console.log("Signin OK => redirect to home");
+          navigation.navigate("TabNavigator");
+        }
+        else{
+          console.log(data.error)
         }
       });
-    navigation.navigate("TabNavigator");
   }
 
   const handleSignUp = () => {
@@ -123,9 +125,9 @@ export default function LoginScreen({ navigation }) {
           setsignUpPassword("");
           setSignUpAdress("");
           setSignUpProfession("");
+          setVisible(false);
+          navigation.navigate("TabNavigator");
         }
-        setVisible(false);
-        navigation.navigate("TabNavigator");
       });
   };
 
