@@ -54,7 +54,9 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={InteractionScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="PatientInfo" component={PatientInfoScreen} />
+          <Stack.Screen name="InteractionScreen" component={InteractionScreen} />
           <Stack.Screen name="Subscription" component={SubscriptionScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>

@@ -7,11 +7,10 @@ import Pathology from '../components/Pathology';
 import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
 
 
+export default function PatientInfoScreen({navigation, route}) {
+    //route params
+    const {searchedDrugData} = route.params
 
-
-
-export default function TreatmentScreen() {
-    
     //Input states
     const [addDrugInput, setAddDrugInput] = useState("")
     const [addPathologyInput, setAddPathologyInput] = useState("")
@@ -57,6 +56,7 @@ export default function TreatmentScreen() {
                 rxcui: data.drugData.rxNav[0].rxcui
             }
             dispatch(addDrugToCurrentTreatment(drugPayload))
+            setAddDrugInput("");
         }
         else{
             console.log("nop")
@@ -76,6 +76,7 @@ export default function TreatmentScreen() {
                 name: addPathologyInput
             }
             dispatch(addPathology(pathologyPayload))
+            setAddPathologyInput("");
        }
 
 
@@ -84,6 +85,26 @@ export default function TreatmentScreen() {
                   <Pathology key={i} name={data.name}/>
               );
            });
+
+    function handleValidateBtn(){
+        // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
+        const drugSearch = true
+        const patientCurrentTreatmentRxcuiJoin = patient.currentTreatment.map(drug => drug.rxcui).join("+")
+        if(drugSearch){
+            console.log(searchedDrugData.rxNav[0].rxcui)
+            const url = `https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if(data.result){
+                    navigation.navigate("Interaction", {interactionResponse: data})
+                }
+                else{
+                    console.log(data.error) // later display error with an error react state
+                }
+            })
+        }
+    }
     return(
         <View style={styles.container}>
             <View style={styles.patientName}>
@@ -120,7 +141,8 @@ export default function TreatmentScreen() {
             </View>
             </ScrollView>
             <View style={styles.validateContainer}>
-                <TouchableOpacity style={styles.validate}>
+                <TouchableOpacity style={styles.validate}
+                onPress = {handleValidateBtn}>
                     <Text style={styles.validateText}>Validate</Text>
                 </TouchableOpacity>
             </View>

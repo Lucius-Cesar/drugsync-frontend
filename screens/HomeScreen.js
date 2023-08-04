@@ -10,6 +10,9 @@ export default function HomeScreen({ navigation }) {
     const [isOption2Active, setOption2Active] = useState(true);
     const [isOption3Active, setOption3Active] = useState(true);
     const [isOption4Active, setOption4Active] = useState(true);
+
+    //search Input state
+    const[searchInputValue, setSearchInputValue] = useState("")
   
     const handleDrugButtonPress = () => {
       setDrugActive(true);
@@ -34,7 +37,31 @@ export default function HomeScreen({ navigation }) {
 
     const handleOption4Press = () => {
         setOption4Active(!isOption4Active);
-  };
+    }
+
+
+    const handleSearchBtn = () => {
+      if(isDrugActive){
+        fetch("https://drugsync-backend.vercel.app/drugs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            drug: searchInputValue,
+          }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.result){
+          //Later: check if a patient preset has been already selected, if yes => navigate directly to InteractionScreen
+          navigation.navigate("PatientInfo", {searchedDrugData:data.drugData})
+        }
+        else{
+          console.log(data.error) //Later: Display it with an error statut
+        }
+      })
+      }}
   
     return (
       <View style={styles.container}>
@@ -49,11 +76,16 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
             <View style={styles.inputContainer}>
-                <TextInput placeholder='Search' placeholderTextColor="rgba(0,0,0,0.5)" style={styles.searchInput}></TextInput>
+                <TextInput placeholder='Search' 
+                placeholderTextColor="rgba(0,0,0,0.5)" 
+                style={styles.searchInput}
+                onChangeText = {value => setSearchInputValue(value)}
+                value = {searchInputValue} />
                 <FontAwesome name='search' size={20} color='#000' style={styles.searchIcon} />
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.searchBtn}>
+                <TouchableOpacity style={styles.searchBtn} 
+                onPress = {handleSearchBtn}>
                     <Text style={styles.btnText}>Search</Text>
                 </TouchableOpacity>
             </View>
@@ -87,7 +119,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
     );
-  }
+    }
   
   const styles = StyleSheet.create({
     container: {
@@ -203,4 +235,4 @@ export default function HomeScreen({ navigation }) {
         textAlign: 'center',
         marginTop: 50,
     },
-  });
+  })
