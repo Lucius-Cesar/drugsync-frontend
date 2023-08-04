@@ -2,28 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import InteractionContainer from '../components/InteractionContainer';
 import OpenButton from '../components/OpenButton';
+import { useDispatch, useSelector } from "react-redux";
 
-export default function InteractionScreen() {
+
+export default function InteractionScreen({navigation, route}) {
+  //redux
   const [interactionData, setInteractionData] = useState(null);
+  const {searchedDrugData} = route.params
+  const patient = useSelector((state) => state.patient.value);
+
 
   useEffect(() => {
-    fetch("https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/207106+152923/656659", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-    })
+      const patientCurrentTreatmentRxcuiJoin = patient.currentTreatment.map(drug => drug.rxcui).join("+")
+      const url = `https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
+      fetch(url)
       .then(response => response.json())
       .then(data => {
-        if (data.result) {
-          console.log(true);
-          setInteractionData(data);
-        } else {
-          console.log(false);
-          console.log(data.error); // Later: display the error directly to the friend with a drugInputError state
+        if(data.result){
+          setInteractionData(data)
         }
-      });
-  }, []);
+        else{
+          console.log(data.error) // later display error with an error react state
+    }
+  })}, [patient]);
 
   return (
     <View style={styles.container}>
@@ -34,7 +35,7 @@ export default function InteractionScreen() {
       <ScrollView style={styles.scrollViewTreatment}>
         <OpenButton interactionData={interactionData} interactionType="current" />
       </ScrollView>
-      <Text style={styles.searchText}>Searched: <Text style={styles.searchedText}>Infliximab</Text></Text>
+      <Text style={styles.searchText}>Searched: <Text style={styles.searchedText}>{searchedDrugData.name}</Text></Text>
       <ScrollView style={styles.scrollViewSearched}>
         <OpenButton interactionData={interactionData} interactionType="searched" />
       </ScrollView>

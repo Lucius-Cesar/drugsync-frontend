@@ -11,19 +11,6 @@ export default function InteractionContainer(props){
     const patient = useSelector((state) => state.patient.value);
 
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(loadPatientInfo(patientPayload))
-        },
-        []
-      )
-
-      const patientPayload = { //simulating patients DB
-        currentTreatment: [{
-            name: "Infliximab",
-            rxcui: "191831"
-        }],
-    }
-
 
     function handleAddDrugButton(){
 

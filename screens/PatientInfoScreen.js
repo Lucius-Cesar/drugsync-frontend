@@ -18,6 +18,7 @@ export default function PatientInfoScreen({navigation, route}) {
     //Redux
     const dispatch = useDispatch()
     const patient = useSelector((state) => state.patient.value);
+    console.log(patient)
 
     useEffect(() => {
         dispatch(loadPatientInfo(patientPayload))
@@ -26,16 +27,13 @@ export default function PatientInfoScreen({navigation, route}) {
       )
 
     const patientPayload = { //simulating patients DB
-        currentTreatment: [{
-            name: "Infliximab",
-            rxcui: "191831"
-        }],
+        currentTreatment: [],
         pathologies : [
             {
                 name: "Polyarthrite Rheumatoïde",
             }
         ]
-    }
+    } 
     function handleAddDrugButton(){
 
         fetch("https://drugsync-backend.vercel.app/drugs", {
@@ -89,20 +87,8 @@ export default function PatientInfoScreen({navigation, route}) {
     function handleValidateBtn(){
         // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
         const drugSearch = true
-        const patientCurrentTreatmentRxcuiJoin = patient.currentTreatment.map(drug => drug.rxcui).join("+")
         if(drugSearch){
-            console.log(searchedDrugData.rxNav[0].rxcui)
-            const url = `https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
-            fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if(data.result){
-                    navigation.navigate("Interaction", {interactionResponse: data})
-                }
-                else{
-                    console.log(data.error) // later display error with an error react state
-                }
-            })
+            navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
         }
     }
     return(
