@@ -57,6 +57,7 @@ export default function TreatmentScreen() {
                 rxcui: data.drugData.rxNav[0].rxcui
             }
             dispatch(addDrugToCurrentTreatment(drugPayload))
+            setAddDrugInput("");
         }
         else{
             console.log("nop")
