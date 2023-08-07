@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LoginScreen from './screens/LoginScreen';
 import SubscriptionScreen from './screens/SubscriptionScreen';
+import PatientsScreen from './screens/PatientsScreen';
 
 // Redux Setup
 import { Provider} from 'react-redux';
@@ -23,7 +24,7 @@ const TabNavigator = () => {
    <Tab.Navigator screenOptions={{ headerShown: false }}>
      <Tab.Screen name="Home" component={SubscriptionScreen} />
      <Tab.Screen name="User" component={UserScreen} />
-     <Tab.Screen name="Favorite" component={LoginScreen} />
+     <Tab.Screen name="Patients" component={PatientsScreen} />
    </Tab.Navigator>
  );
 }
@@ -33,7 +34,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Patient" component={PatientsScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
