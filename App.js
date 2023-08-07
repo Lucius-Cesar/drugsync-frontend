@@ -13,6 +13,7 @@ import UserScreen from './screens/UserScreen';
 import user from './reducers/user';
 import patient from './reducers/patient';
 import PatientInfoScreen from './screens/PatientInfoScreen'
+import TreatmentSuggestionScreen from './screens/TreatmentSuggestionScreen';
 
 const store = configureStore({
   reducer: { user, patient},
@@ -54,6 +55,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="PatientInfo" component={PatientInfoScreen} />
           <Stack.Screen name="Interaction" component={InteractionScreen} />

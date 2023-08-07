@@ -20,16 +20,23 @@ export default function TreatmentSuggestion(props) {
 
   return (
     <>
-      <View style={styles.view}>
+      <View style={styles.container}>
+      <TouchableOpacity onPress={() => toggleContent()} style={styles.openContainer}>
         <Text style={styles.name}>{props.name}</Text>
-        <Button
-          style={styles.button}
-          title={showDescription ? "▼" : "▶️"}
-          onPress={toggleContent}
-        />
+          <FontAwesome
+              name={showDescription ? 'caret-down' : 'caret-right'}
+              size={22}
+              color= '#163232'
+          />
+        </TouchableOpacity>
+        <View style={styles.searchContainer}>
+          <TouchableOpacity style={styles.searchIcon}>
+            <FontAwesome name='search' size={22} color= '#163232'></FontAwesome>
+          </TouchableOpacity>
+        </View>
       </View>
       {showDescription && (
-        <View style={{ padding: 20 }}>
+        <View style={styles.descriptionContainer}>
           <Text style={styles.description}>{props.description}</Text>
         </View>
       )}
@@ -39,24 +46,46 @@ export default function TreatmentSuggestion(props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'row',
   },
-  description: {
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 2,
+  openContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 250,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 20,
   },
   name: {
-    borderColor: "black",
-    borderRadius: 10,
-    alignItems: "center",
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#163232',
   },
-  view: {
-    borderWidth: 3,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    width: 300,
-    alignItems: "center",
+  descriptionContainer:{
+    marginTop: 0,
+    backgroundColor: 'rgba(229,229,229,0.65)',
+    width: 230,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    marginLeft: 10,
+  },
+  description:{
+    fontSize: 16,
+    color: '#163232',
+  },
+  searchContainer: {
+    width: 120,
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchIcon: {
+    marginTop: 25,
   },
 });

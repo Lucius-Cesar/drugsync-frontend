@@ -54,6 +54,10 @@ const ModalPopup = ({ visible, children }) => {
 };
 
 export default function LoginScreen({ navigation }) {
+
+  //fetch id message
+  const [idError, setIdError] = useState(false);
+
   //login states
   const [visible, setVisible] = useState(false);
   const [signInEmail, setSignInEmail] = useState("");
@@ -79,6 +83,7 @@ export default function LoginScreen({ navigation }) {
 
   
   function handleSignIn() {
+    setIdError(false);
     fetch("https://drugsync-backend.vercel.app/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -97,6 +102,7 @@ export default function LoginScreen({ navigation }) {
         }
         else{
           console.log(data.error)
+          setIdError(data.error);
         }
       });
   }
@@ -168,6 +174,7 @@ export default function LoginScreen({ navigation }) {
           secureTextEntry={true}
         />
       </View>
+      {idError && <Text style={styles.error}>{idError}</Text>}
       <View style={styles.btnContainer}>
         <TouchableOpacity
           style={styles.loginBtn}
@@ -175,7 +182,6 @@ export default function LoginScreen({ navigation }) {
         >
           <Text style={styles.loginTextBtn}>Login</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.createBtn}>
           <ModalPopup visible={visible}>
             <View style={{ alignItems: "center" }}>
@@ -223,7 +229,7 @@ export default function LoginScreen({ navigation }) {
                 textContentType="password"
                 secureTextEntry={true}
               />
-              <Text style={styles.modalText}>Adress</Text>
+              <Text style={styles.modalText}>Address</Text>
               <TextInput
                 style={styles.modalInput}
                 onChangeText={(value) => setSignUpAdress(value)}
@@ -388,7 +394,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   error: {
-    margin: 10,
-    color: "red",
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
