@@ -8,44 +8,53 @@ import {
   Button,
   handlePress,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { logout } from "../reducers/user";
 
-export default function LoginScreen({ navigation }) {
+export default function UserScreen({ navigation }) {
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logout);
+    navigation.navigate("Login");
+  }
   return (
     <View style={styles.container}>
       <View style={styles.userContainer}>
         <Image
-          source={require("../assets/logo.png")}
+          source={require("../assets/raoult.jpg")}
           style={styles.profil}
         ></Image>
-        <Text style={styles.userName}>Raoul</Text>
+        <Text style={styles.userName}>Dr. Raoult</Text>
       </View>
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("Subscription")}
           style={styles.buttonSubscription}
         >
           <Text style={styles.subscriptionText}> 1 Year Subscription </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.infoUser}>
-        <View style={styles.infosView}>
-          <Text style={styles.infos}> Mails</Text>
-          <Button style={styles.buttonEdit} title="Edits" />
-        </View>
-        <View style={styles.infosView}>
-          <Text style={styles.infos}> password </Text>
-          <Button style={styles.buttonEdit} title="Edits" />
-        </View>
-        <View style={styles.infosView}>
-          <Text style={styles.infos}> number</Text>
-          <Button style={styles.buttonEdit} title="Edits" />
-        </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.info}>vraimedecin@gmail.com</Text>
+        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.info}>●●●●●●●●●</Text>
+        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.info}>+33612345678</Text>
+        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.buttonHelp}>
         <Text style={styles.subscriptionText}> Help</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonOut}>
+      <TouchableOpacity style={styles.buttonOut} onPress={handleLogout}>
         <Text style={styles.subscriptionText}> Log Out</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.contactBtn}>
+        <Text style={styles.contactText}>Contact us</Text>
       </TouchableOpacity>
     </View>
   );
@@ -61,14 +70,12 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     alignItems: "center",
-    padding: 20,
-    marginBottom: 200,
+    marginTop: 50,
   },
-
   userName: {
     fontSize: 16,
     color: "black",
-    marginTop: 15,
+    marginBottom: 20,
   },
   profil: {
     width: 170,
@@ -79,54 +86,68 @@ const styles = StyleSheet.create({
   },
   buttonSubscription: {
     borderRadius: 10,
-    borderColor: "#008777",
-    borderWidth: 2,
     backgroundColor: "#008777",
     width: 270,
     height: 45,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -170,
   },
   subscriptionText: {
     color: "white",
     fontSize: 20,
     textAlign: "center",
   },
-  infoUser: {
-    flex: 1,
-    marginTop: -120,
-  },
-  infos: {
-    fontSize: 20,
-    marginRight: 200,
-    color: "black",
-  },
-  infosView: {
-    flex: 1,
+  infoContainer: {
+    marginTop: 20,
+    width: 400,
     flexDirection: "row",
-    height: 100,
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
-  buttonEdit: {},
+  info: {
+    width: 250,
+    marginLeft: 20,
+    marginBottom: 20,
+    fontSize: 20,
+    textAlign: "center",
+  },
+  text: {
+      fontSize: 18,
+    },
+  editBtn: {
+    marginRight: 20,
+  },
+  editText:{
+    color: "#057B6C",
+    textDecorationLine: "underline",
+    fontSize: 20, 
+  },
   buttonHelp: {
     borderRadius: 10,
-    borderColor: "#008777",
-    borderWidth: 2,
-    backgroundColor: "#008777",
+    backgroundColor: "008777",
     width: 250,
     height: 45,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 30,
   },
   buttonOut: {
     borderRadius: 10,
-    borderColor: "red",
-    backgroundColor: "red",
+    backgroundColor: "#DE6969",
     width: 210,
     height: 45,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
   },
+  contactBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  contactText: {
+      color: "#82D2CB",
+      fontSize: 16,
+      textAlign: "center",
+      textDecorationLine: "underline",
+    },
 });
