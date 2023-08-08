@@ -13,6 +13,7 @@ import UserScreen from './screens/UserScreen';
 import user from './reducers/user';
 import patient from './reducers/patient';
 import PatientInfoScreen from './screens/PatientInfoScreen'
+import TreatmentSuggestionScreen from './screens/TreatmentSuggestionScreen';
 
 const store = configureStore({
   reducer: { user, patient},

@@ -1,13 +1,21 @@
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image} from 'react-native';
 import {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
 import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
+import loadingGif from '../assets/Spinner.gif';
 
 
 export default function PatientInfoScreen({navigation, route}) {
+    
+    //loading state
+    const [isLoading, setIsLoading] = useState(false);
+
+    //fetch error message
+    const [drugError, setDrugError] = useState(false);
+    
     //route params
     const {searchedDrugData} = route.params
 
@@ -36,6 +44,8 @@ export default function PatientInfoScreen({navigation, route}) {
     } 
     function handleAddDrugButton(){
 
+        setIsLoading(true);
+        setDrugError(false);
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
         headers: {
@@ -47,6 +57,7 @@ export default function PatientInfoScreen({navigation, route}) {
       })
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false);
         if(data.result){
             console.log("yes")
             const drugPayload = {
@@ -58,7 +69,8 @@ export default function PatientInfoScreen({navigation, route}) {
         }
         else{
             console.log("nop")
-            console.log(data.error) // later: display the error directly to the frend with a drugInputError state
+            console.log(data.error)
+            setDrugError(data.error);
         }
     })
     }    
@@ -109,7 +121,9 @@ export default function PatientInfoScreen({navigation, route}) {
                 <TouchableOpacity onPress = {handleAddDrugButton}>
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={{ width: 30, height: 30 }} />}
             </View>
+            {drugError && <Text style={styles.error}>{drugError}</Text>}
             </ScrollView>
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Pathologies</Text>
@@ -203,5 +217,10 @@ const styles = StyleSheet.create({
     },
     scrollViewTreatment: {
         height: '75%',
-        },
+    },
+    error: {
+        color: 'red',
+        marginLeft: 20,
+        marginBottom: 10,
+      },
 });

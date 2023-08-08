@@ -26,6 +26,18 @@ export default function OpenButton({ interactionData, interactionType }) {
     });
   };
 
+  const getSeverityColor = (severity) => {
+    if (severity === 'minor') {
+      return '#ECBF20';
+    } else if (severity === 'moderate') {
+      return '#FC945A';
+    } else if (severity === 'major') {
+      return '#EB483E';
+    } else {
+      return 'gray';
+    }
+  };
+
   return (
     <View style={styles.container}>
       {filteredInteractions.length > 0 ? (
@@ -35,19 +47,23 @@ export default function OpenButton({ interactionData, interactionType }) {
             onPress={() => handleToggleText(index)}
             style={styles.button}
           >
-            <View style={styles.btnName}>
-              <FontAwesome name={'warning'} size={18} color="red" />
+            <View style={[styles.btnName,{ borderColor: getSeverityColor(interaction.severity) },]} >
+              <FontAwesome name={'warning'} size={18} color={getSeverityColor(interaction.severity)} />
               <Text style={styles.buttonText}>
                 {interaction.drugA} -- {interaction.drugB}
               </Text>
               <FontAwesome
                 name={textVisible[index] ? 'chevron-down' : 'chevron-right'}
                 size={18}
-                color="black"
+                color= '#163232'
               />
             </View>
             {textVisible[index] && (
               <View style={styles.additionalTextContainer}>
+                <View style={styles.severityContainer}>
+                  <Text style={styles.severity}>Severity: </Text>
+                  <Text style={[styles.severityText,{ color: getSeverityColor(interaction.severity) },]}>{interaction.severity}</Text>
+                </View>
                 <Text style={styles.additionalText}>{interaction.description}</Text>
               </View>
             )}
@@ -74,7 +90,6 @@ const styles = StyleSheet.create({
     width: 300,
     padding: 10,
     borderWidth: 1,
-    borderColor: 'red',
     borderRadius: 8,
   },
   button: {
@@ -102,5 +117,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: 'black',
+  },
+  severityText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  severityContainer:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    alignItems: 'center',
+  },
+  severity: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 5,
   },
 });

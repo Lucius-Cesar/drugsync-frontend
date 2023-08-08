@@ -3,6 +3,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
 
 export default function HomeScreen({ navigation }) {
+
+    //fetch error message
+    const [drugError, setDrugError] = useState(false);
+
     //Drug/Pathology Buttons hook
     const [isDrugActive, setDrugActive] = useState(true);
     //Checkboxes hook
@@ -41,6 +45,7 @@ export default function HomeScreen({ navigation }) {
 
 
     const handleSearchBtn = () => {
+      setDrugError(false);
       if(isDrugActive){
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
@@ -58,7 +63,8 @@ export default function HomeScreen({ navigation }) {
           navigation.navigate("PatientInfo", {searchedDrugData:data.drugData})
         }
         else{
-          console.log(data.error) //Later: Display it with an error statut
+          console.log(data.error)
+          setDrugError(data.error);
         }
       })
       }}
@@ -69,7 +75,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.searchContainer}>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={[styles.drugButton, isDrugActive ? styles.activeButton : null]} onPress={handleDrugButtonPress}>
-                    <Text style={styles.btnText}>Drugs</Text>
+                    <Text style={styles.btnText}>Drug</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.pathologyButton,!isDrugActive ? styles.activeButton : null,]} onPress={handlePathologyButtonPress}>
                     <Text style={styles.btnText}>Pathology</Text>
@@ -83,6 +89,7 @@ export default function HomeScreen({ navigation }) {
                 value = {searchInputValue} />
                 <FontAwesome name='search' size={20} color='#000' style={styles.searchIcon} />
             </View>
+            {drugError && <Text style={styles.error}>{drugError}</Text>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.searchBtn} 
                 onPress = {handleSearchBtn}>
@@ -234,5 +241,10 @@ export default function HomeScreen({ navigation }) {
         color: '#163232',
         textAlign: 'center',
         marginTop: 50,
+    },
+    error: {
+      color: 'red',
+      textAlign: 'center',
+      marginTop: 10,
     },
   })
