@@ -39,7 +39,9 @@
     }
     const pathologiesFound = pathologySuggestions.map((pathology, i) =>{
       return(
-      <TouchableOpacity key = {i} onPress = {
+      <TouchableOpacity 
+      style={styles.pathologyContainer}
+      key = {i} onPress = {
         () => handlePathologyPress(pathology)
         }>
         <Text style={styles.pathologyList}>
