@@ -46,11 +46,12 @@ export default function PatientInfoScreen({navigation, route}) {
     function displayTextInputIfNewPatient(){
         if(!patient.name){
             return(
-            <TextInput
-            onChangeText = {value => setPatientNameInput(value)}
-            placeholder = "Enter Patient name"
-            value = {patientNameInput}
-            />
+                <TextInput
+                onChangeText = {value => setPatientNameInput(value)}
+                placeholder = "Enter Patient name"
+                value = {patientNameInput}
+                style={styles.patientNameInput}
+                />
             )
         }
         else{
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         flex: 1,
-        marginTop: 100 //just to check if input appears
+        height: '100%',
     },
     patientName: {
         alignItems: 'center',
@@ -341,4 +342,14 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginBottom: 10,
       },
+    patientNameInput: {
+        backgroundColor: 'rgba(218,218,218,0.33)',
+        height: 50,
+        width:150,
+        borderRadius: 10,
+        textAlign: 'center',
+        marginTop: 50,
+        marginBottom: 10,
+        marginLeft: 20,
+    },
 });
