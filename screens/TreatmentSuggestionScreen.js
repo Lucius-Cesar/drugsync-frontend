@@ -10,63 +10,74 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import TreatmentSuggestion from "../components/TreatmentSuggestion";
+import { useState } from "react";
 
-export default function TreatmentSuggestionScreen() {
-  const TreatmentSuggestiondata = [
-    {
-      name: "aspirin",
-      description:
-        "Aspirin, also known by its generic name acetylsalicylic acid, is a widely used medication that belongs to the class of drugs known as nonsteroidal anti-inflammatory drugs (NSAIDs). It is commonly used to relieve pain, reduce inflammation, and lower fever. Aspirin is available over-the-counter in various forms, including tablets, capsules, and effervescent tablets,",
-    },
-    {
-      name: "duovent",
-      description:
-        "Duovent is a combination medication used for the treatment of respiratory conditions such as asthma and chronic obstructive pulmonary disease (COPD). It is classified as a bronchodilator and contains two active ingredients: ipratropium bromide and salbutamol (also known as albuterol).",
-    },
-    {
-      name: "vitamine C",
-      description:
-        "Vitamin C, also known as ascorbic acid, is a water-soluble vitamin that plays a crucial role in supporting various essential functions in the human body. It is considered an essential nutrient because our bodies cannot produce it, so we must obtain it from our diet or supplements.",
-    },
-  ];
-  const treatments = TreatmentSuggestiondata.map((data, i) => {
-    return (
-      <TreatmentSuggestion
-        key={i}
-        name={data.name}
-        description={data.description}
-      />
-    );
-  });
+export default function TreatmentSuggestionScreen({navigation, route}) {
+
+  const treatmentSuggestion = route.params.treatmentSuggestion
+  // 
+  console.log(treatmentSuggestion)
+  //see the console log for the data structure
+  //replace TreatmentSuggestionData like this: efo_term corresponds to disease name 
+  // to display at the top of the screen, treatmentSuggestion.drugs is the array containing drugs names
+  const drugs = treatmentSuggestion.drugs.map((drug, index) => (
+    <TreatmentSuggestion
+      key={index}
+      name={drug}
+      style={styles.treatments}
+    />
+  ));
 
   return (
     <View style={styles.container}>
       <View style={styles.view}>
-        <Text style={styles.Text}> Polyarthrite Rhumatoïde </Text>
+          <Text style={styles.text}>{treatmentSuggestion.efo_term}</Text>
+        <Text style={styles.treatmentText}>Treatment suggestion: </Text>
+        <Text style={styles.pressText}>Press to see interactions</Text>
+        <View style={styles.treatmentContainer}>
+          <ScrollView style={styles.scrollView}>{drugs}</ScrollView>
+        </View>
       </View>
-
-      <ScrollView>{treatments}</ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  Text: {
-    marginTop: 30,
-    fontSize: 25,
-    fontWeight: "bold",
-    borderWidth: 4,
-    borderColor: "#008777",
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: "008777",
-    color: "white",
+  container: {
+    backgroundColor: "#fff",
+    height: "100%",
   },
   view: {
-    backgroundColor: "008777",
-    alignItems: "center",
+    width: "auto",
+    borderRadius: 10,
+    padding: 10,
   },
-  container: {
-    alignItems: "center",
+  text: {
+    marginTop: 50,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#008777",
+    borderRadius: 10,
+    padding: 10,
+    width: 300,
+    textAlign: "center",
+  },
+  treatmentText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 30,
+    color: "#057B6C",
+  },
+  treatmentContainer: {
+    marginTop: 20,
+    maxHeight: 600,
+  },
+  pressText: {
+    marginTop: 20,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#163232",
+    fontSize: 16,
   },
 });

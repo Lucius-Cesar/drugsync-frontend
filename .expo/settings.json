@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "urlRandomness": "q1tPjC4",
+=======
+  "urlRandomness": "VK2mdJY",
+>>>>>>> db4fbe12cfae7c567f5ec358d00384ac603c0714
   "dev": true,
   "minify": false,
   "https": false,

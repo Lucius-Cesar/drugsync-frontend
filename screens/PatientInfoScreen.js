@@ -1,15 +1,32 @@
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image} from 'react-native';
 import {useState, useEffect} from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
 import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
+import loadingGif from '../assets/Spinner.gif';
 
 
 export default function PatientInfoScreen({navigation, route}) {
+    
+    //loading state
+    const [isLoading, setIsLoading] = useState(false);
+
+    //fetch error message
+    const [drugError, setDrugError] = useState(false);
+    
+    const [patientNameInput, setPatientNameInput] = useState("")
     //route params
-    const {searchedDrugData} = route.params
+    let treatmentSuggestion, searchedDrugData;
+
+    if (route.params.treatmentSuggestion) {
+      treatmentSuggestion = route.params.treatmentSuggestion;
+    }
+    
+    if (route.params.searchedDrugData) {
+      searchedDrugData = route.params.searchedDrugData;
+    }
 
     //Input states
     const [addDrugInput, setAddDrugInput] = useState("")
@@ -25,6 +42,26 @@ export default function PatientInfoScreen({navigation, route}) {
         },
         []
       )
+    
+    function displayTextInputIfNewPatient(){
+        if(!patient.name){
+            return(
+                <TextInput
+                onChangeText = {value => setPatientNameInput(value)}
+                placeholder = "Enter Patient name"
+                value = {patientNameInput}
+                style={styles.patientNameInput}
+                />
+            )
+        }
+        else{
+            return(
+            <View style={styles.patientName}>
+                <Text style={styles.titleText}>{patient.name}</Text>
+            </View>
+            )
+        }
+    }
 
     const patientPayload = { //simulating patients DB
         currentTreatment: [],
@@ -36,6 +73,8 @@ export default function PatientInfoScreen({navigation, route}) {
     } 
     function handleAddDrugButton(){
 
+        setIsLoading(true);
+        setDrugError(false);
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
         headers: {
@@ -47,6 +86,7 @@ export default function PatientInfoScreen({navigation, route}) {
       })
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false);
         if(data.result){
             console.log("yes")
             const drugPayload = {
@@ -58,7 +98,8 @@ export default function PatientInfoScreen({navigation, route}) {
         }
         else{
             console.log("nop")
-            console.log(data.error) // later: display the error directly to the frend with a drugInputError state
+            console.log(data.error)
+            setDrugError(data.error);
         }
     })
     }    
@@ -85,17 +126,106 @@ export default function PatientInfoScreen({navigation, route}) {
            });
 
     function handleValidateBtn(){
-        // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
-        const drugSearch = true
-        if(drugSearch){
-            navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
+        if(!patient.name){            
+            fetch(("https://drugsync-backend.vercel.app/patients"),
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(
+                    {
+                        name: patientNameInput,
+                        currentTreatment: patient.currentTreatment.map(e => e.name),
+                        pathologies: patient.pathologies.map(e => e.name)
+                    }
+                )})
+                .then(response => response.json())
+                .then( data => { if(data.result){
+                    console.log(patient.currentTreatment)
+                            if(searchedDrugData){
+                                navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
+                            }
+                            else if(treatmentSuggestion){
+                                console.log(treatmentSuggestion)
+                                fetch("https://drugsync-backend.vercel.app/pathologies/treatmentSuggestions",
+                                {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify(treatmentSuggestion),
+                                }).then(response => response.json())
+                                .then(treatmentSuggData =>{
+                                    if(treatmentSuggData.result){
+                    
+                                        console.log(treatmentSuggData)
+                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: data.treatmentSuggestions})
+                                    }
+                                    else{
+                                        console.log(treatmentSuggData.error)
+                                    }
+                                })
+                            }
+                            else{
+                                console.log("error")
+                            }
+                            }
+
+                        })                 
+            
         }
+        else 
+        // update Treatment and pathologies in the DB if reducer patient.name contains already something
+        {
+            fetch(("https://drugsync-backend.vercel.app/patients/updatePatient"),
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(
+                    {
+                        name: patientNameInput,
+                        currentTreatment: patient.currentTreatment.map(e => e.name),
+                        pathologies: patient.pathologies.map(e => e.name)
+                    }
+                )})
+                .then(response => response.json())
+                .then( data => { if(data.result){
+                    console.log(patient.currentTreatment)
+                            if(searchedDrugData){
+                                navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
+                            }
+                            else if(treatmentSuggestion){
+                                console.log(treatmentSuggestion)
+                                fetch("https://drugsync-backend.vercel.app/pathologies/treatmentSuggestions",
+                                {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify(treatmentSuggestion),
+                                }).then(response => response.json())
+                                .then(treatmentSuggData =>{
+                                    if(treatmentSuggData.result){
+                    
+                                        console.log(treatmentSuggData)
+                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: data.treatmentSuggestions})
+                                    }
+                                    else{
+                                        console.log(treatmentSuggData.error)
+                                    }
+                                })
+                            }
+                            else{
+                                console.log("error")
+                            }
+                            }
+
+                        })                 
+            
+        }
+    
     }
+        // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
+        
+    
     return(
         <View style={styles.container}>
-            <View style={styles.patientName}>
-                <Text style={styles.titleText}>Patient Name</Text>
-            </View>
+            {displayTextInputIfNewPatient()}
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Patient current treatment</Text>
             </View>
@@ -109,7 +239,9 @@ export default function PatientInfoScreen({navigation, route}) {
                 <TouchableOpacity onPress = {handleAddDrugButton}>
                     <FontAwesome name="plus-circle" size={30} color="#008777"/>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={{ width: 30, height: 30 }} />}
             </View>
+            {drugError && <Text style={styles.error}>{drugError}</Text>}
             </ScrollView>
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Pathologies</Text>
@@ -140,6 +272,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         flex: 1,
+        height: '100%',
     },
     patientName: {
         alignItems: 'center',
@@ -203,5 +336,20 @@ const styles = StyleSheet.create({
     },
     scrollViewTreatment: {
         height: '75%',
-        },
+    },
+    error: {
+        color: 'red',
+        marginLeft: 20,
+        marginBottom: 10,
+      },
+    patientNameInput: {
+        backgroundColor: 'rgba(218,218,218,0.33)',
+        height: 50,
+        width:150,
+        borderRadius: 10,
+        textAlign: 'center',
+        marginTop: 50,
+        marginBottom: 10,
+        marginLeft: 20,
+    },
 });
