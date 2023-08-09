@@ -2,8 +2,12 @@ import {View, Text, TextInput, TouchableOpacity, Image, StyleSheet} from 'react-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
 import PathologySearchModal from "../components/PathologySearchModal";
+import loadingGif from '../assets/Spinner.gif';
 
 export default function HomeScreen({ navigation }) {
+
+    //Loading state
+    const [isLoading, setIsLoading] = useState(false);
 
     //fetch error message
     const [error, setError] = useState(false);
@@ -55,6 +59,7 @@ export default function HomeScreen({ navigation }) {
     const [pathologySuggestions, setPathologySuggestions] = useState([])
 
     const handleSearchBtn = () => {
+      setIsLoading(true);
       setError(false);
       if(isDrugActive){ 
         fetch("https://drugsync-backend.vercel.app/drugs", {
@@ -68,9 +73,11 @@ export default function HomeScreen({ navigation }) {
       })
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false)
         if(data.result){
           //Later: check if a patient preset has been already selected, if yes => navigate directly to InteractionScreen
           navigation.navigate("PatientInfo", {searchedDrugData:data.drugData})
+          setSearchInputValue('')
         }
         else{
           console.log(data.error)
@@ -79,18 +86,21 @@ export default function HomeScreen({ navigation }) {
       })
       }
     else{ // If Pathology is Active
-      
+      setIsLoading(true);
       fetch(`https://drugsync-backend.vercel.app/pathologies/${searchInputValue}`)
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false)
         if(data.result){
           const pathologies = data.drugIndications.map(e => e.efo_term)
           setDrugIndications(data.drugIndications)
           setPathologySuggestions(pathologies)
           setVisible(true)
+          setSearchInputValue('')
         }
         else{
-        setError(data.error)
+          console.log(data.error)
+          setError(data.error)
         }
 })
 
@@ -130,6 +140,7 @@ export default function HomeScreen({ navigation }) {
                 onPress = {handleSearchBtn}>
                     <Text style={styles.btnText}>Search</Text>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={styles.loadingGif} />}
             </View>
             <Text style={styles.interactions}>Interactions to highlight</Text>
             <View style={styles.filterContainer}>
@@ -281,5 +292,13 @@ export default function HomeScreen({ navigation }) {
       color: 'red',
       textAlign: 'center',
       marginTop: 10,
+    },
+    loadingGif:{
+      width: 40,
+      height: 40,
+      marginLeft: 5,
+      position: 'absolute',
+      right: 50,
+      top: 30,
     },
   })

@@ -42,7 +42,7 @@
       <TouchableOpacity key = {i} onPress = {
         () => handlePathologyPress(pathology)
         }>
-        <Text>
+        <Text style={styles.pathologyList}>
           {pathology}
           
         </Text>
@@ -59,15 +59,14 @@
               styles.modalContainer,
             ]}
           >
-            <TouchableOpacity onPress={handleCloseButtonPress}>
+            <TouchableOpacity onPress={handleCloseButtonPress} style={styles.closeBtn}>
               <FontAwesome name="times" size={20} color="#000" />
             </TouchableOpacity>
             <View>
-              <Text>
-                {pathologiesFound.length} pathologies found for term {searchTerm}
+              <Text style={styles.pathologyTextContainer}>
+                <Text style={styles.pathologyNumber}>{pathologiesFound.length}</Text> pathologies found for term <Text style={styles.pathologyText}>'{searchTerm}'</Text>
               </Text>
-              {pathologiesFound}
-
+                {pathologiesFound}
             </View>
           </Animated.View>
         </View>
@@ -83,10 +82,39 @@
       alignItems: "center",
     },
     modalContainer: {
-      width: "80%",
+      width: "auto",
       backgroundColor: "#fff",
       borderRadius: 10,
       padding: 20,
       elevation: 20,
+    },
+    closeBtn: {
+      flexDirection: "row",
+      justifyContent: 'flex-end',
+      margin: 5,
+    },
+    pathologyText: {
+      fontSize: 22,
+      fontWeight: "bold",
+    },
+    pathologyTextContainer:{
+      color: '#5DA6A0',
+      fontSize: 20,
+      margin: 15,
+    },
+    pathologyNumber: {
+      fontWeight: 'bold',
+    },
+    pathologyContainer:{
+      margin: 5,
+      backgroundColor: 'rgba(229, 229, 229, 0.65)',
+      textAlign: 'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 10,
+      height: 50,
+    },
+    pathologyList:{
+      fontSize: 18,
     },
   });
