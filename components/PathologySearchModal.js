@@ -11,25 +11,21 @@
   } from "react-native";
   import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-  export default function PathologySearchModal({ isVisible, handleVisible, pathologySuggestions, searched, drugIndications}) {
+  export default function PathologySearchModal({ isVisible, handleVisible, pathologySuggestions, searchTerm, drugIndications, navigation}) {
+
     const [modalVisible, setModalVisible] = useState(isVisible);
-    console.log("searched value:", searched); // Vérifiez si la valeur est correctement transmise
+    console.log("searched value:", searchTerm); // Vérifiez si la valeur est correctement transmise
     console.log(pathologySuggestions)
-    function handleOnPress () {
+    function handleCloseButtonPress () {
       handleVisible()
     }
+
 
     useEffect(() => {
       toggleModal();
     }, [isVisible]);
 
-    useEffect(() => {
-      if (pathologySuggestions.length) {
-        setModalVisible(true);
-      } else {
-        setModalVisible(false);
-      }
-    }, [pathologySuggestions]);
+    
 
     const toggleModal = () => {
       if (isVisible) {
@@ -40,8 +36,12 @@
         }
     }
     const pathologiesFound = pathologySuggestions.map((pathology, i) =>{
+      function handlePathologyPress(){
+        treatmentSuggestion = drugIndications.filter(e => e.efo_term === pathology)
+        navigation.navigate("PatientInfo", {treatmentSuggestion: treatmentSuggestion})
+      }
       return(
-      <TouchableOpacity key = {i}>
+      <TouchableOpacity key = {i} onPress = {handlePathologyPress}>
         <Text>
           {pathology}
           
@@ -59,12 +59,12 @@
               styles.modalContainer,
             ]}
           >
-            <TouchableOpacity onPress={handleOnPress}>
+            <TouchableOpacity onPress={handleCloseButtonPress}>
               <FontAwesome name="times" size={20} color="#000" />
             </TouchableOpacity>
             <View>
               <Text>
-                {pathologiesFound.length} pathologies found for term {searched}
+                {pathologiesFound.length} pathologies found for term {searchTerm}
               </Text>
               {pathologiesFound}
 

@@ -12,8 +12,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import UserScreen from './screens/UserScreen';
 import user from './reducers/user';
 import patient from './reducers/patient';
+
+// Screens import for navigation
 import PatientInfoScreen from './screens/PatientInfoScreen'
 import TreatmentSuggestionScreen from './screens/TreatmentSuggestionScreen';
+import PathologySearchModal from './components/PathologySearchModal';
 
 const store = configureStore({
   reducer: { user, patient},
@@ -53,11 +56,14 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <Provider store={store}>
+
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Navigator screenOptions={{ headerShown: false }}>     
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="PathologySearchModal" component={PathologySearchModal} />
           <Stack.Screen name="PatientInfo" component={PatientInfoScreen} />
+          <Stack.Screen name="TreatmentSuggestion" component={TreatmentSuggestionScreen} />
           <Stack.Screen name="Interaction" component={InteractionScreen} />
           <Stack.Screen name="Subscription" component={SubscriptionScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />

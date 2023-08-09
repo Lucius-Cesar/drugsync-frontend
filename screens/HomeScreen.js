@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
       })
       }
     else{ // If Pathology is Active
-      setVisible(true)
+      
       fetch(`https://drugsync-backend.vercel.app/pathologies/${searchInputValue}`)
       .then(response => response.json())
       .then(data => {
@@ -102,6 +102,7 @@ export default function HomeScreen({ navigation }) {
             <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
             <PathologySearchModal isVisible = {visible} 
             handleVisible = {handleVisible} 
+            navigation = {navigation}
             pathologySuggestions = {pathologySuggestions} 
             drugIndications = {drugIndications}
             searchTerm = {searchInputValue}/>

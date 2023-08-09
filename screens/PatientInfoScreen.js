@@ -17,7 +17,7 @@ export default function PatientInfoScreen({navigation, route}) {
     const [drugError, setDrugError] = useState(false);
     
     //route params
-    const {searchedDrugData} = route.params
+    const {searchedDrugData} = route.params.searchedDrugData
 
     //Input states
     const [addDrugInput, setAddDrugInput] = useState("")
@@ -99,8 +99,11 @@ export default function PatientInfoScreen({navigation, route}) {
     function handleValidateBtn(){
         // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
         const drugSearch = true
-        if(drugSearch){
+        if(searchedDrugData){
             navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
+        }
+        else if(treatmentSuggestion){
+            navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: treatmentSuggestions})
         }
     }
     return(
