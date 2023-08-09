@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     patientContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: 'lightgrey',
         borderRadius: 10,
         padding: 10,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     },
     deleteIcon: {
         padding: 5,
-        marginLeft: 90,
+        //marginLeft: 90,
         //width: 20,
         //height: 20,
         backgroundColor: '#DE6969',

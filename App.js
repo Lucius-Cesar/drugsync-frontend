@@ -12,7 +12,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import UserScreen from './screens/UserScreen';
 import user from './reducers/user';
 import patient from './reducers/patient';
-import PatientInfoScreen from './screens/PatientInfoScreen'
+import PatientInfoScreen from './screens/PatientInfoScreen';
+import PatientsScreen from './screens/PatientsScreen'
 
 const store = configureStore({
   reducer: { user, patient},
@@ -54,7 +55,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home" component={PatientsScreen} />
           <Stack.Screen name="PatientInfo" component={PatientInfoScreen} />
           <Stack.Screen name="Interaction" component={InteractionScreen} />
           <Stack.Screen name="Subscription" component={SubscriptionScreen} />

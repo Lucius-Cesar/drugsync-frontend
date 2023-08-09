@@ -1,32 +1,43 @@
-import {TextInput,View,StyleSheet,TouchableOpacity,ScrollView} from 'react-native';
+import {TextInput,View,StyleSheet,TouchableOpacity,ScrollView, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importer l'icône de votre choix depuis la bibliothèque;
 import Patient from '../components/Patient';
+import {useEffect, useState} from 'react';
 //import { useState } from 'react';
 
 
 
 export default function PatientsScreen() {
-    const patientsData =[
-      {title : 'patient 1'},
-      {title : 'patient 2'},
-      {title : 'patient 3'},
-      {title : 'patient 4'},
-      {title : 'patient 5'},
-      {title : 'patient 6'},
-      {title : 'patient 7'},
-    ]
+
+  // Déclaration d'un état "patientsData" avec une valeur initiale vide
+  const [patientsData, setPatientsData] = useState([])
+  const [searchInput,setSearchInput] = useState("")
+
+  //Utilisation de useEffect pour effectuer des opérations après le rendu initial du composant
+  useEffect(()=>{
+    //Appel à l'API à l'URL spécifiée pour récupérer les données des patients
+    fetch("https://drugsync-backend.vercel.app/patients/allPatients")
+    .then(response => response.json()) //Convertir la réponse en format JSON
+    .then(data =>{
+      const filterData = data.patients.filter((patient)=>patient.name.toLowerCase().includes(searchInput.toLowerCase()))
+      setPatientsData(filterData) //Mettre à jour l'état "patientsData" avec les données reçues
+      
+    })
+  }, [searchInput]) //Tableau de dépendances est rempli avec searchinput, qui lui est changé grace a onChangeText , a chaque fois que la valeur va etre change le code contenu dans le useEffect va etre reéxecuter
 
     const patients = patientsData.map((data,i) =>{
-      return <Patient key={i} title={data.title}/>
+      return <Patient key={i}  title={data.name}/>
     })
 
-
+console.log(searchInput)
 
     return(
         <View style = {styles.container}>
           <View style = {styles.searchContainer}>
 
-            <TextInput style = {styles.searchInput} placeholder="Search"/>
+            <TextInput style = {styles.searchInput} placeholder="Search"
+            onChangeText={ (value) => setSearchInput(value)}
+            value={searchInput}
+            />
             <View style={styles.searchIconContainer}>
               <TouchableOpacity style= {styles.searchIcon}>
                 <Icon name="search" size={20} color="black"/>
