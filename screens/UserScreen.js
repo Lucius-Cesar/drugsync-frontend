@@ -7,57 +7,108 @@ import {
   StyleSheet,
   Button,
   handlePress,
+  handleInputChange,
 } from "react-native";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../reducers/user";
+import { useSelector } from "react-redux";
 
 export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
+  const user = { mail: "test@gmail.com" };
+  const [editModeMail, setEditModeMail] = useState(false);
+  const [editModePassword, setEditModePassword] = useState(false);
+  const [editModeAddress, setEditModeAddress] = useState(false);
+  const toggleEditModeMail = () => setEditModeMail((prevMode) => !prevMode);
+  const toggleEditModePassword = () =>
+    setEditModePassword((prevMode) => !prevMode);
+  const toggleEditModeAddress = () =>
+    setEditModeAddress((prevMode) => !prevMode);
+
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch(
+          `https://drugsync-backend.vercel.app/users/mail/${user.mail}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   function handleLogout() {
     dispatch(logout);
     navigation.navigate("Login");
   }
-  return (
-    <View style={styles.container}>
-      <View style={styles.userContainer}>
-        <Image
-          source={require("../assets/raoult.jpg")}
-          style={styles.profil}
-        ></Image>
-        <Text style={styles.userName}>Dr. Raoult</Text>
-      </View>
-      <View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Subscription")}
-          style={styles.buttonSubscription}
-        >
-          <Text style={styles.subscriptionText}> 1 Year Subscription </Text>
+  if (!userData) {
+    return <Text>Loading...</Text>;
+  } else {
+    return (
+      <View style={styles.container}>
+        <View style={styles.userContainer}>
+          <Image
+            source={require("../assets/raoult.jpg")}
+            style={styles.profil}
+          ></Image>
+          <Text style={styles.userName}>
+            {userData.userInfos.lastname} {userData.userInfos.firstname}
+          </Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Subscription")}
+            style={styles.buttonSubscription}
+          >
+            <Text style={styles.subscriptionText}> 1 Year Subscription </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.info}>{user.mail}</Text>
+          <TouchableOpacity style={styles.editBtn} onPress={toggleEditModeMail}>
+            <Text style={styles.editText}>
+              {" "}
+              {editModeMail ? "Save" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.info}>●●●●●●●●●</Text>
+          <TouchableOpacity
+            style={styles.editBtn}
+            onPress={toggleEditModePassword}
+          >
+            <Text style={styles.editText}>
+              {editModePassword ? "Save" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.info}>{userData.userInfos.adress}</Text>
+          <TouchableOpacity style={styles.editBtn}>
+            <Text style={styles.editText} onPress={toggleEditModeAddress}>
+              {editModeAddress ? "Save" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.buttonHelp}>
+          <Text style={styles.subscriptionText}>Help</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonOut} onPress={handleLogout}>
+          <Text style={styles.subscriptionText}> Log Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.contactBtn}>
+          <Text style={styles.contactText}>Contact us</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.info}>vraimedecin@gmail.com</Text>
-        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.info}>●●●●●●●●●</Text>
-        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.info}>+33612345678</Text>
-        <TouchableOpacity style={styles.editBtn}><Text style={styles.editText}>Edit</Text></TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.buttonHelp}>
-        <Text style={styles.subscriptionText}> Help</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonOut} onPress={handleLogout}>
-        <Text style={styles.subscriptionText}> Log Out</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.contactBtn}>
-        <Text style={styles.contactText}>Contact us</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -111,15 +162,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   text: {
-      fontSize: 18,
-    },
+    fontSize: 18,
+  },
   editBtn: {
     marginRight: 20,
   },
-  editText:{
+  editText: {
     color: "#057B6C",
     textDecorationLine: "underline",
-    fontSize: 20, 
+    fontSize: 20,
   },
   buttonHelp: {
     borderRadius: 10,
@@ -145,9 +196,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   contactText: {
-      color: "#82D2CB",
-      fontSize: 16,
-      textAlign: "center",
-      textDecorationLine: "underline",
-    },
+    color: "#82D2CB",
+    fontSize: 16,
+    textAlign: "center",
+    textDecorationLine: "underline",
+  },
 });
