@@ -17,7 +17,15 @@ export default function PatientInfoScreen({navigation, route}) {
     const [drugError, setDrugError] = useState(false);
     
     //route params
-    const {searchedDrugData} = route.params.searchedDrugData
+    let treatmentSuggestion, searchedDrugData;
+
+    if (route.params.treatmentSuggestion) {
+      treatmentSuggestion = route.params.treatmentSuggestion;
+    }
+    
+    if (route.params.searchedDrugData) {
+      searchedDrugData = route.params.searchedDrugData;
+    }
 
     //Input states
     const [addDrugInput, setAddDrugInput] = useState("")
@@ -98,14 +106,33 @@ export default function PatientInfoScreen({navigation, route}) {
 
     function handleValidateBtn(){
         // just a boolean -> later: add a state to know if the previous research was pathology or drugs and pass it with navigation params
-        const drugSearch = true
         if(searchedDrugData){
             navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
         }
         else if(treatmentSuggestion){
-            navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: treatmentSuggestions})
+            console.log(treatmentSuggestion)
+            fetch("https://drugsync-backend.vercel.app/pathologies/treatmentSuggestions",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(treatmentSuggestion),
+            }).then(response => response.json())
+            .then(data =>{
+                if(data.result){
+
+                    console.log(data)
+                    navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: data.treatmentSuggestions})
+                }
+                else{
+                    console.log(data.error)
+                }
+            })
         }
-    }
+        else{
+            console.log("error")
+        }
+        }
+    
     return(
         <View style={styles.container}>
             <View style={styles.patientName}>

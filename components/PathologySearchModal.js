@@ -14,12 +14,14 @@
   export default function PathologySearchModal({ isVisible, handleVisible, pathologySuggestions, searchTerm, drugIndications, navigation}) {
 
     const [modalVisible, setModalVisible] = useState(isVisible);
-    console.log("searched value:", searchTerm); // Vérifiez si la valeur est correctement transmise
-    console.log(pathologySuggestions)
     function handleCloseButtonPress () {
       handleVisible()
     }
-
+    function handlePathologyPress(pathology){
+      const treatmentSuggestion = drugIndications.filter(e => e.efo_term === pathology)
+      navigation.navigate("PatientInfo", {treatmentSuggestion: treatmentSuggestion[0]})
+      handleVisible()
+    }
 
     useEffect(() => {
       toggleModal();
@@ -36,12 +38,10 @@
         }
     }
     const pathologiesFound = pathologySuggestions.map((pathology, i) =>{
-      function handlePathologyPress(){
-        treatmentSuggestion = drugIndications.filter(e => e.efo_term === pathology)
-        navigation.navigate("PatientInfo", {treatmentSuggestion: treatmentSuggestion})
-      }
       return(
-      <TouchableOpacity key = {i} onPress = {handlePathologyPress}>
+      <TouchableOpacity key = {i} onPress = {
+        () => handlePathologyPress(pathology)
+        }>
         <Text>
           {pathology}
           

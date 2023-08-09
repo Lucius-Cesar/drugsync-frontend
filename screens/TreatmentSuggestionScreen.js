@@ -12,8 +12,14 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import TreatmentSuggestion from "../components/TreatmentSuggestion";
 import { useState } from "react";
 
-export default function TreatmentSuggestionScreen() {
+export default function TreatmentSuggestionScreen({navigation, route}) {
 
+  const treatmentSuggestion = route.params.treatmentSuggestion
+  // 
+  console.log(treatmentSuggestion)
+  //see the console log for the data structure
+  //replace TreatmentSuggestionData like this: efo_term corresponds to disease name 
+  // to display at the top of the screen, treatmentSuggestion.drugs is the array containing drugs names
   const TreatmentSuggestiondata = [
     {
       name: "Aspirin",
