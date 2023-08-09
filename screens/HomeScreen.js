@@ -1,8 +1,17 @@
 import {View, Text, TextInput, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
+import PathologySearchModal from "../components/PathologySearchModal";
+import loadingGif from '../assets/Spinner.gif';
 
 export default function HomeScreen({ navigation }) {
+
+    //Loading state
+    const [isLoading, setIsLoading] = useState(false);
+
+    //fetch error message
+    const [error, setError] = useState(false);
+
     //Drug/Pathology Buttons hook
     const [isDrugActive, setDrugActive] = useState(true);
     //Checkboxes hook
@@ -39,9 +48,20 @@ export default function HomeScreen({ navigation }) {
         setOption4Active(!isOption4Active);
     }
 
+    //pathology research states
+    const [visible, setVisible] = useState(false)
+    
+    const handleVisible = () => {
+     setVisible(!visible)
+     setPathologySuggestions([])
+    }
+    const [drugIndications, setDrugIndications] = useState([])
+    const [pathologySuggestions, setPathologySuggestions] = useState([])
 
     const handleSearchBtn = () => {
-      if(isDrugActive){
+      setIsLoading(true);
+      setError(false);
+      if(isDrugActive){ 
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
         headers: {
@@ -53,28 +73,59 @@ export default function HomeScreen({ navigation }) {
       })
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false)
         if(data.result){
           //Later: check if a patient preset has been already selected, if yes => navigate directly to InteractionScreen
           navigation.navigate("PatientInfo", {searchedDrugData:data.drugData})
+          setSearchInputValue('')
         }
         else{
-          console.log(data.error) //Later: Display it with an error statut
+          console.log(data.error)
+          setError(data.error);
         }
       })
-      }}
+      }
+    else{ // If Pathology is Active
+      setIsLoading(true);
+      fetch(`https://drugsync-backend.vercel.app/pathologies/${searchInputValue}`)
+      .then(response => response.json())
+      .then(data => {
+        setIsLoading(false)
+        if(data.result){
+          const pathologies = data.drugIndications.map(e => e.efo_term)
+          setDrugIndications(data.drugIndications)
+          setPathologySuggestions(pathologies)
+          setVisible(true)
+          setSearchInputValue('')
+        }
+        else{
+          console.log(data.error)
+          setError(data.error)
+        }
+})
+
+    }
+    }
   
     return (
       <View style={styles.container}>
             <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
+            <PathologySearchModal isVisible = {visible} 
+            handleVisible = {handleVisible} 
+            navigation = {navigation}
+            pathologySuggestions = {pathologySuggestions} 
+            drugIndications = {drugIndications}
+            searchTerm = {searchInputValue}/>
         <View style={styles.searchContainer}>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={[styles.drugButton, isDrugActive ? styles.activeButton : null]} onPress={handleDrugButtonPress}>
-                    <Text style={styles.btnText}>Drugs</Text>
+                    <Text style={styles.btnText}>Drug</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.pathologyButton,!isDrugActive ? styles.activeButton : null,]} onPress={handlePathologyButtonPress}>
                     <Text style={styles.btnText}>Pathology</Text>
                 </TouchableOpacity>
             </View>
+
             <View style={styles.inputContainer}>
                 <TextInput placeholder='Search' 
                 placeholderTextColor="rgba(0,0,0,0.5)" 
@@ -83,11 +134,13 @@ export default function HomeScreen({ navigation }) {
                 value = {searchInputValue} />
                 <FontAwesome name='search' size={20} color='#000' style={styles.searchIcon} />
             </View>
+            {error && <Text style={styles.error}>{error}</Text>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.searchBtn} 
                 onPress = {handleSearchBtn}>
                     <Text style={styles.btnText}>Search</Text>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={styles.loadingGif} />}
             </View>
             <Text style={styles.interactions}>Interactions to highlight</Text>
             <View style={styles.filterContainer}>
@@ -234,5 +287,18 @@ export default function HomeScreen({ navigation }) {
         color: '#163232',
         textAlign: 'center',
         marginTop: 50,
+    },
+    error: {
+      color: 'red',
+      textAlign: 'center',
+      marginTop: 10,
+    },
+    loadingGif:{
+      width: 40,
+      height: 40,
+      marginLeft: 5,
+      position: 'absolute',
+      right: 50,
+      top: 30,
     },
   })

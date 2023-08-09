@@ -1,12 +1,17 @@
-import {View,Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import {View,Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import TreatmentLight from './TreatmentLight';
 import { useEffect, useState} from 'react';
 import { useDispatch, useSelector } from'react-redux';
 import { loadPatientInfo, addDrugToCurrentTreatment} from '../reducers/patient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import loadingGif from '../assets/Spinner.gif';
 
 export default function InteractionContainer(props){
 
+    //fetch error message
+    const [drugError, setDrugError] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
     const [addDrugInput, setAddDrugInput] = useState("")
     const patient = useSelector((state) => state.patient.value);
 
@@ -14,6 +19,8 @@ export default function InteractionContainer(props){
 
     function handleAddDrugButton(){
 
+        setDrugError(false);
+        setIsLoading(true);
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
         headers: {
@@ -25,6 +32,7 @@ export default function InteractionContainer(props){
     })
         .then(response => response.json())
         .then(data => {
+            setIsLoading(false)
             if(data.result){
                 console.log("yes")
                 const drugPayload = {
@@ -36,7 +44,8 @@ export default function InteractionContainer(props){
             }
             else{
                 console.log("nop")
-                console.log(data.error) // later: display the error directly to the frend with a drugInputError state
+                console.log(data.error)
+                setDrugError(data.error);
             }
     })
     } 
@@ -58,7 +67,9 @@ return(
                 <TouchableOpacity onPress = {handleAddDrugButton}>
                     <FontAwesome name="plus-circle" size={15} color="#008777"/>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={{ width: 25, height: 25 }} />}
     </View>
+    {drugError && <Text style={styles.error}>{drugError}</Text>}
 </View>
 )
 }
@@ -89,4 +100,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
         textAlign: 'center',
     },
+    error: {
+        color: 'red',
+        marginLeft: 20,
+        marginBottom: 10,
+      },
 });

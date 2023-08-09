@@ -1,62 +1,55 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  Image,
   StyleSheet,
-  Button,
-  ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
 
 export default function TreatmentSuggestion(props) {
-  const [showDescription, setShowDescription] = useState(false);
 
-  const toggleContent = () => {
-    setShowDescription(!showDescription);
-  };
 
   return (
-    <>
-      <View style={styles.view}>
+      <View style={styles.container}>
+      <TouchableOpacity style={styles.openContainer}>
         <Text style={styles.name}>{props.name}</Text>
-        <Button
-          style={styles.button}
-          title={showDescription ? "▼" : "▶️"}
-          onPress={toggleContent}
-        />
+        </TouchableOpacity>
       </View>
-      {showDescription && (
-        <View style={{ padding: 20 }}>
-          <Text style={styles.description}>{props.description}</Text>
-        </View>
-      )}
-    </>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  description: {
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 2,
+  openContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 'auto',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 20,
+    backgroundColor: '#C3F1ED',
   },
   name: {
-    borderColor: "black",
-    borderRadius: 10,
-    alignItems: "center",
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#163232',
   },
-  view: {
-    borderWidth: 3,
-    flexDirection: "row",
-    justifyContent: "space-between",
+  searchContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
-    width: 300,
-    alignItems: "center",
+    marginLeft: 10,
+    backgroundColor: '#82D2CB',
+    borderRadius: 20,
+    padding: 10,
+    width: 800,
   },
 });
