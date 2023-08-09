@@ -1,11 +1,12 @@
 import {View, Text, TextInput, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
+import PathologySearchModal from "../components/PathologySearchModal";
 
 export default function HomeScreen({ navigation }) {
 
     //fetch error message
-    const [drugError, setDrugError] = useState(false);
+    const [error, setError] = useState(false);
 
     //Drug/Pathology Buttons hook
     const [isDrugActive, setDrugActive] = useState(true);
@@ -43,10 +44,19 @@ export default function HomeScreen({ navigation }) {
         setOption4Active(!isOption4Active);
     }
 
+    //pathology research states
+    const [visible, setVisible] = useState(false)
+    
+    const handleVisible = () => {
+     setVisible(!visible)
+     setPathologySuggestions([])
+    }
+    const [drugIndications, setDrugIndications] = useState([])
+    const [pathologySuggestions, setPathologySuggestions] = useState([])
 
     const handleSearchBtn = () => {
-      setDrugError(false);
-      if(isDrugActive){
+      setError(false);
+      if(isDrugActive){ 
         fetch("https://drugsync-backend.vercel.app/drugs", {
         method: "POST",
         headers: {
@@ -64,14 +74,37 @@ export default function HomeScreen({ navigation }) {
         }
         else{
           console.log(data.error)
-          setDrugError(data.error);
+          setError(data.error);
         }
       })
-      }}
+      }
+    else{ // If Pathology is Active
+      setVisible(true)
+      fetch(`https://drugsync-backend.vercel.app/pathologies/${searchInputValue}`)
+      .then(response => response.json())
+      .then(data => {
+        if(data.result){
+          const pathologies = data.drugIndications.map(e => e.efo_term)
+          setDrugIndications(data.drugIndications)
+          setPathologySuggestions(pathologies)
+          setVisible(true)
+        }
+        else{
+        setError(data.error)
+        }
+})
+
+    }
+    }
   
     return (
       <View style={styles.container}>
             <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
+            <PathologySearchModal isVisible = {visible} 
+            handleVisible = {handleVisible} 
+            pathologySuggestions = {pathologySuggestions} 
+            drugIndications = {drugIndications}
+            searchTerm = {searchInputValue}/>
         <View style={styles.searchContainer}>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={[styles.drugButton, isDrugActive ? styles.activeButton : null]} onPress={handleDrugButtonPress}>
@@ -81,6 +114,7 @@ export default function HomeScreen({ navigation }) {
                     <Text style={styles.btnText}>Pathology</Text>
                 </TouchableOpacity>
             </View>
+
             <View style={styles.inputContainer}>
                 <TextInput placeholder='Search' 
                 placeholderTextColor="rgba(0,0,0,0.5)" 
@@ -89,7 +123,7 @@ export default function HomeScreen({ navigation }) {
                 value = {searchInputValue} />
                 <FontAwesome name='search' size={20} color='#000' style={styles.searchIcon} />
             </View>
-            {drugError && <Text style={styles.error}>{drugError}</Text>}
+            {error && <Text style={styles.error}>{error}</Text>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.searchBtn} 
                 onPress = {handleSearchBtn}>
