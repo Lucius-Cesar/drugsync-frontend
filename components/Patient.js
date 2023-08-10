@@ -2,6 +2,7 @@ import {View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { useDispatch } from 'react-redux';
 import { loadPatientInfo} from '../reducers/patient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function Patient(props) {
     const dispatch = useDispatch()
@@ -34,6 +35,7 @@ export default function Patient(props) {
             }
         }
         )
+        props.onDeletePatient(props.name)
     }
 
     return(
@@ -42,8 +44,8 @@ export default function Patient(props) {
         <Text style ={styles.nameText}>
         {props.name}
         </Text>
-        <TouchableOpacity style= {styles.deleteIcon} onPress = {handleDeletePatient}>
-            <Icon name="close" size={12} color="white"/>
+        <TouchableOpacity style={styles.circle} onPress = {handleDeletePatient}>
+            <FontAwesome name='times' size={12} color={'white'} />
         </TouchableOpacity>
 
         </TouchableOpacity>
@@ -68,13 +70,14 @@ const styles = StyleSheet.create({
         marginLeft: 100,
   
     },
-    deleteIcon: {
-        padding: 5,
-        //marginLeft: 90,
-        //width: 20,
-        //height: 20,
+    circle: {
+        width: 20,
+        height: 20,
         backgroundColor: '#DE6969',
         borderRadius: 10,
-    },
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 5,
+      },
   
   })

@@ -3,9 +3,14 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import InteractionContainer from '../components/InteractionContainer';
 import OpenButton from '../components/OpenButton';
 import { useDispatch, useSelector } from "react-redux";
+import loadingGif from '../assets/Spinner.gif';
 
 
 export default function InteractionScreen({navigation, route}) {
+  
+  //loading gif
+  const [isLoading, setIsLoading] = useState(false);
+
   //redux
   const [interactionData, setInteractionData] = useState(null);
   const {searchedDrugData} = route.params
@@ -15,9 +20,11 @@ export default function InteractionScreen({navigation, route}) {
   useEffect(() => {
       const patientCurrentTreatmentRxcuiJoin = patient.currentTreatment.map(drug => drug.rxcui).join("+")
       const url = `https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
+      setIsLoading(true);
       fetch(url)
       .then(response => response.json())
       .then(data => {
+        setIsLoading(false)
         if(data.result){
           setInteractionData(data)
         }

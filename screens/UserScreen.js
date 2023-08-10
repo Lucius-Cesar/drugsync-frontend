@@ -53,7 +53,7 @@ export default function UserScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.userContainer}>
           <Image
-            source={require("../assets/raoult.jpg")}
+            source={require("../assets/house.jpg")}
             style={styles.profil}
           ></Image>
           <Text style={styles.userName}>

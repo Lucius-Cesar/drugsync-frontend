@@ -68,7 +68,9 @@
               <Text style={styles.pathologyTextContainer}>
                 <Text style={styles.pathologyNumber}>{pathologiesFound.length}</Text> pathologies found for term <Text style={styles.pathologyText}>'{searchedTerm}'</Text>
               </Text>
+              <ScrollView style={styles.pathologyListContainer}>
                 {pathologiesFound}
+              </ScrollView>
             </View>
           </Animated.View>
         </View>
@@ -94,6 +96,9 @@
       flexDirection: "row",
       justifyContent: 'flex-end',
       margin: 5,
+    },
+    pathologyListContainer:{
+      maxHeight: 400,
     },
     pathologyText: {
       fontSize: 22,

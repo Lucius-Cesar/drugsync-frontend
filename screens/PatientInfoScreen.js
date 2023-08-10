@@ -11,6 +11,9 @@ import loadingGif from '../assets/Spinner.gif';
 export default function PatientInfoScreen({navigation, route}) {
 
     
+    //patient name error
+    const [patientNameError, setPatientNameError] = useState(false);
+
     //loading state
     const [isLoading, setIsLoading] = useState(false);
 
@@ -41,12 +44,18 @@ export default function PatientInfoScreen({navigation, route}) {
     function displayTextInputIfNewPatient(){
         if(!patient.name){
             return(
+                <View>
                 <TextInput
-                onChangeText = {value => setPatientNameInput(value)}
+                onChangeText={value => {
+                    setPatientNameInput(value);
+                    setPatientNameError(false);
+                }}
                 placeholder = "Enter Patient name"
                 value = {patientNameInput}
                 style={styles.patientNameInput}
                 />
+                {patientNameError && <Text style={styles.error}>Please enter a patient name.</Text>}
+                </View>
             )
         }
         else{
@@ -112,6 +121,14 @@ export default function PatientInfoScreen({navigation, route}) {
            });
 
     function handleValidateBtn(){
+
+        if (!patientNameInput) {
+            setIsLoading(false);
+            setPatientNameError(true);
+            return;
+        }
+
+        setIsLoading(true);
         if(!patient.name){            
             fetch(("https://drugsync-backend.vercel.app/patients"),
             {
@@ -125,7 +142,9 @@ export default function PatientInfoScreen({navigation, route}) {
                     }
                 )})
                 .then(response => response.json())
-                .then( data => { if(data.result){
+                .then( data => {
+                    setIsLoading(false)
+                     if(data.result){
                             if(searchedDrugData){
                                 navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
                             }
@@ -245,6 +264,7 @@ export default function PatientInfoScreen({navigation, route}) {
                 onPress = {handleValidateBtn}>
                     <Text style={styles.validateText}>Validate</Text>
                 </TouchableOpacity>
+                {isLoading && <Image source={loadingGif} style={styles.loadingGif} />}
             </View>
         </View>
     )
@@ -333,5 +353,10 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginBottom: 10,
         marginLeft: 20,
+    },
+    loadingGif: {
+        height: 40,
+        width: 40,
+        marginTop: 50,
     },
 });

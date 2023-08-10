@@ -24,8 +24,14 @@ export default function PatientsScreen({navigation}) {
     })
   }, [searchInput]) //Tableau de dépendances est rempli avec searchinput, qui lui est changé grace a onChangeText , a chaque fois que la valeur va etre change le code contenu dans le useEffect va etre reéxecuter
 
+
+  function handleDeletePatientFromScreen(name) {
+    const updatedPatientsData = patientsData.filter(patient => patient.name !== name);
+    setPatientsData(updatedPatientsData);
+}
+
     const patients = patientsData.map((data,i) =>{
-      return <Patient key={i}  name={data.name} navigation = {navigation}/>
+      return <Patient key={i}  name={data.name} navigation = {navigation} onDeletePatient={handleDeletePatientFromScreen}/>
     })
 
 
