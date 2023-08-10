@@ -15,6 +15,8 @@ import patient from "./reducers/patient";
 
 // Screens import for navigation
 import PatientInfoScreen from "./screens/PatientInfoScreen";
+import PatientsScreen from "./screens/PatientsScreen";
+
 import TreatmentSuggestionScreen from "./screens/TreatmentSuggestionScreen";
 import PathologySearchModal from "./components/PathologySearchModal";
 
@@ -37,7 +39,7 @@ const TabNavigator = () => {
             iconName = "home";
           } else if (route.name === "User") {
             iconName = "user";
-          } else if (route.name === "Favorite") {
+          } else if (route.name === "Patients") {
             iconName = "star";
           }
 
@@ -48,9 +50,9 @@ const TabNavigator = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="User" component={UserScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Favorite" component={LoginScreen} />
+      <Tab.Screen name="Patients" component={PatientsScreen} />
+      <Tab.Screen name="User" component={UserScreen} />
     </Tab.Navigator>
   );
 };
@@ -60,8 +62,8 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
             name="PathologySearchModal"
             component={PathologySearchModal}

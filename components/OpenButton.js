@@ -70,7 +70,7 @@ export default function OpenButton({ interactionData, interactionType }) {
           </TouchableOpacity>
         ))
       ) : (
-        <Text style={styles.buttonText}>Loading...</Text>
+        <Text style={styles.buttonText}>No interaction found</Text>
       )}
     </View>
   );

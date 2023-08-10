@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 
 export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
-  const user = { mail: "test@gmail.com" };
+  const user = useSelector((state) => state.user.value);
   const [editModeMail, setEditModeMail] = useState(false);
   const [editModePassword, setEditModePassword] = useState(false);
   const [editModeAddress, setEditModeAddress] = useState(false);
@@ -34,8 +34,7 @@ export default function UserScreen({ navigation }) {
           `https://drugsync-backend.vercel.app/users/mail/${user.mail}`
         );
         const data = await response.json();
-        console.log(data);
-        setUserData(data);
+        setUserData(data.userInfos);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -58,7 +57,7 @@ export default function UserScreen({ navigation }) {
             style={styles.profil}
           ></Image>
           <Text style={styles.userName}>
-            {userData.userInfos.lastname} {userData.userInfos.firstname}
+            {userData.lastname} {userData.firstname}
           </Text>
         </View>
         <View>
@@ -90,7 +89,7 @@ export default function UserScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.info}>{userData.userInfos.adress}</Text>
+          <Text style={styles.info}>{userData.adress}</Text>
           <TouchableOpacity style={styles.editBtn}>
             <Text style={styles.editText} onPress={toggleEditModeAddress}>
               {editModeAddress ? "Save" : "Edit"}

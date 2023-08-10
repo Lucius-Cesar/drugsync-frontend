@@ -6,7 +6,7 @@ import {useEffect, useState} from 'react';
 
 
 
-export default function PatientsScreen() {
+export default function PatientsScreen({navigation}) {
 
   // Déclaration d'un état "patientsData" avec une valeur initiale vide
   const [patientsData, setPatientsData] = useState([])
@@ -25,10 +25,9 @@ export default function PatientsScreen() {
   }, [searchInput]) //Tableau de dépendances est rempli avec searchinput, qui lui est changé grace a onChangeText , a chaque fois que la valeur va etre change le code contenu dans le useEffect va etre reéxecuter
 
     const patients = patientsData.map((data,i) =>{
-      return <Patient key={i}  title={data.name}/>
+      return <Patient key={i}  name={data.name} navigation = {navigation}/>
     })
 
-console.log(searchInput)
 
     return(
         <View style = {styles.container}>

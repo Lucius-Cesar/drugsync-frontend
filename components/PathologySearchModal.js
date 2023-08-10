@@ -11,7 +11,7 @@
   } from "react-native";
   import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-  export default function PathologySearchModal({ isVisible, handleVisible, pathologySuggestions, searchTerm, drugIndications, navigation}) {
+  export default function PathologySearchModal({ isVisible, handleVisible, pathologySuggestions, searchedTerm, drugIndications, navigation}) {
 
     const [modalVisible, setModalVisible] = useState(isVisible);
     function handleCloseButtonPress () {
@@ -66,7 +66,7 @@
             </TouchableOpacity>
             <View>
               <Text style={styles.pathologyTextContainer}>
-                <Text style={styles.pathologyNumber}>{pathologiesFound.length}</Text> pathologies found for term <Text style={styles.pathologyText}>'{searchTerm}'</Text>
+                <Text style={styles.pathologyNumber}>{pathologiesFound.length}</Text> pathologies found for term <Text style={styles.pathologyText}>'{searchedTerm}'</Text>
               </Text>
                 {pathologiesFound}
             </View>

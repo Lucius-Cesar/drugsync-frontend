@@ -28,8 +28,11 @@ export const patientSlice = createSlice({
     removePathology: (state, action) => {
         state.value.pathologies = state.value.pathologies.filter(pathology => pathology.name !== action.payload)
     },
+    resetPatientReducer: (state, action) => {
+      state.value = initialState
+    }
   },
 });
 
-export const {loadPatientInfo, addDrugToCurrentTreatment, removeDrugFromCurrentTreatment, addPathology, removePathology} = patientSlice.actions;
+export const {loadPatientInfo, addDrugToCurrentTreatment, removeDrugFromCurrentTreatment, addPathology, removePathology, resetPatientReducer} = patientSlice.actions;
 export default patientSlice.reducer;

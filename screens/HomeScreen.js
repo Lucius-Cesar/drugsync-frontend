@@ -3,6 +3,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
 import PathologySearchModal from "../components/PathologySearchModal";
 import loadingGif from '../assets/Spinner.gif';
+import { useDispatch, useSelector } from "react-redux";
+
 
 export default function HomeScreen({ navigation }) {
 
@@ -22,6 +24,7 @@ export default function HomeScreen({ navigation }) {
 
     //search Input state
     const[searchInputValue, setSearchInputValue] = useState("")
+    const[searchedTerm, setSearchedTerm] = useState("") // once we press search -> save searchInputValue to searchedTerm
   
     const handleDrugButtonPress = () => {
       setDrugActive(true);
@@ -50,6 +53,9 @@ export default function HomeScreen({ navigation }) {
 
     //pathology research states
     const [visible, setVisible] = useState(false)
+
+    //redux Patient
+    const patient = useSelector((state) => state.patient.value);
     
     const handleVisible = () => {
      setVisible(!visible)
@@ -80,7 +86,6 @@ export default function HomeScreen({ navigation }) {
           setSearchInputValue('')
         }
         else{
-          console.log(data.error)
           setError(data.error);
         }
       })
@@ -96,6 +101,7 @@ export default function HomeScreen({ navigation }) {
           setDrugIndications(data.drugIndications)
           setPathologySuggestions(pathologies)
           setVisible(true)
+          setSearchedTerm(searchInputValue)
           setSearchInputValue('')
         }
         else{
@@ -106,16 +112,26 @@ export default function HomeScreen({ navigation }) {
 
     }
     }
-  
+    function displayPatientName(){
+      if(patient.name){
+          return(
+            <View style={styles.patientName}>
+              <Text style={styles.titleText}>{patient.name}</Text>
+            </View>
+          )
+      }
+
+  }
     return (
       <View style={styles.container}>
+        {displayPatientName()}
             <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
             <PathologySearchModal isVisible = {visible} 
             handleVisible = {handleVisible} 
             navigation = {navigation}
             pathologySuggestions = {pathologySuggestions} 
             drugIndications = {drugIndications}
-            searchTerm = {searchInputValue}/>
+            searchedTerm = {searchedTerm}/>
         <View style={styles.searchContainer}>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={[styles.drugButton, isDrugActive ? styles.activeButton : null]} onPress={handleDrugButtonPress}>
@@ -181,6 +197,22 @@ export default function HomeScreen({ navigation }) {
       flexDirection: 'column',
       alignItems: 'center',
     },
+    titleText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#163232',
+    },
+    patientName: {
+      alignSelf: "start",
+      alignItems: "center",
+      justifyContent: 'center',
+      backgroundColor:'rgba(218,218,218,0.33)',
+      width: 150,
+      height: 40,
+      borderRadius: 10,
+      marginTop: 50,
+      marginLeft: 20,
+      },
       logo: {
         width: 80,
         height: 80,

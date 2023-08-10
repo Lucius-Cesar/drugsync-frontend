@@ -182,7 +182,7 @@ export default function LoginScreen({ navigation }) {
         >
           <Text style={styles.loginTextBtn}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.createBtn}>
+        <TouchableOpacity style={styles.createBtn} onPress={() => setVisible(true)}>
           <ModalPopup visible={visible}>
             <View style={{ alignItems: "center" }}>
               <View style={styles.header}>
@@ -229,7 +229,7 @@ export default function LoginScreen({ navigation }) {
                 textContentType="password"
                 secureTextEntry={true}
               />
-              <Text style={styles.modalText}>Address</Text>
+              <Text style={styles.modalText}>Adress</Text>
               <TextInput
                 style={styles.modalInput}
                 onChangeText={(value) => setSignUpAdress(value)}
@@ -251,7 +251,9 @@ export default function LoginScreen({ navigation }) {
               </TouchableOpacity>
             </View>
           </ModalPopup>
-          <Text style={styles.createTextBtn} onPress={() => setVisible(true)}>
+
+          
+          <Text style={styles.createTextBtn}>
             Sign Up
           </Text>
         </TouchableOpacity>

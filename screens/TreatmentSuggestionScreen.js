@@ -25,6 +25,7 @@ export default function TreatmentSuggestionScreen({navigation, route}) {
       key={index}
       name={drug}
       style={styles.treatments}
+      navigation = {navigation}
     />
   ));
 

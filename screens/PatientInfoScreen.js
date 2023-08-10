@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
-import { loadPatientInfo, addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
+import {addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
 import loadingGif from '../assets/Spinner.gif';
 
 
 export default function PatientInfoScreen({navigation, route}) {
+
     
     //loading state
     const [isLoading, setIsLoading] = useState(false);
@@ -35,13 +36,7 @@ export default function PatientInfoScreen({navigation, route}) {
     //Redux
     const dispatch = useDispatch()
     const patient = useSelector((state) => state.patient.value);
-    console.log(patient)
 
-    useEffect(() => {
-        dispatch(loadPatientInfo(patientPayload))
-        },
-        []
-      )
     
     function displayTextInputIfNewPatient(){
         if(!patient.name){
@@ -63,14 +58,7 @@ export default function PatientInfoScreen({navigation, route}) {
         }
     }
 
-    const patientPayload = { //simulating patients DB
-        currentTreatment: [],
-        pathologies : [
-            {
-                name: "Polyarthrite Rheumatoïde",
-            }
-        ]
-    } 
+    
     function handleAddDrugButton(){
 
         setIsLoading(true);
@@ -111,17 +99,15 @@ export default function PatientInfoScreen({navigation, route}) {
        });
 
        function handleAddPathologyButton(){
-            const pathologyPayload = {
-                name: addPathologyInput
-            }
+            const pathologyPayload = addPathologyInput
             dispatch(addPathology(pathologyPayload))
             setAddPathologyInput("");
        }
 
 
-    const pathologies = patient.pathologies.map((data, i) => {
+    const pathologies = patient.pathologies.map((pathologyName, i) => {
             return (
-                  <Pathology key={i} name={data.name}/>
+                  <Pathology key={i} name={pathologyName}/>
               );
            });
 
@@ -135,12 +121,11 @@ export default function PatientInfoScreen({navigation, route}) {
                     {
                         name: patientNameInput,
                         currentTreatment: patient.currentTreatment.map(e => e.name),
-                        pathologies: patient.pathologies.map(e => e.name)
+                        pathologies: patient.pathologies
                     }
                 )})
                 .then(response => response.json())
                 .then( data => { if(data.result){
-                    console.log(patient.currentTreatment)
                             if(searchedDrugData){
                                 navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
                             }
@@ -156,7 +141,7 @@ export default function PatientInfoScreen({navigation, route}) {
                                     if(treatmentSuggData.result){
                     
                                         console.log(treatmentSuggData)
-                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: data.treatmentSuggestions})
+                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: treatmentSuggData.treatmentSuggestions})
                                     }
                                     else{
                                         console.log(treatmentSuggData.error)
@@ -180,15 +165,15 @@ export default function PatientInfoScreen({navigation, route}) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(
                     {
-                        name: patientNameInput,
+                        name: patient.name,
                         currentTreatment: patient.currentTreatment.map(e => e.name),
-                        pathologies: patient.pathologies.map(e => e.name)
+                        pathologies: patient.pathologies
                     }
                 )})
                 .then(response => response.json())
-                .then( data => { if(data.result){
-                    console.log(patient.currentTreatment)
+                .then( data => { 
                             if(searchedDrugData){
+                                console.log(searchedDrugData)
                                 navigation.navigate("Interaction", {searchedDrugData: searchedDrugData})
                             }
                             else if(treatmentSuggestion){
@@ -203,17 +188,14 @@ export default function PatientInfoScreen({navigation, route}) {
                                     if(treatmentSuggData.result){
                     
                                         console.log(treatmentSuggData)
-                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: data.treatmentSuggestions})
+                                        navigation.navigate("TreatmentSuggestion", {treatmentSuggestion: treatmentSuggData.treatmentSuggestions})
                                     }
                                     else{
                                         console.log(treatmentSuggData.error)
                                     }
                                 })
                             }
-                            else{
-                                console.log("error")
-                            }
-                            }
+                            
 
                         })                 
             
