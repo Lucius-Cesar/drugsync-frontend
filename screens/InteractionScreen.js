@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import InteractionContainer from '../components/InteractionContainer';
 import OpenButton from '../components/OpenButton';
 import { useDispatch, useSelector } from "react-redux";
@@ -40,10 +40,12 @@ export default function InteractionScreen({navigation, route}) {
         <InteractionContainer />
       </View>
       <ScrollView style={styles.scrollViewTreatment}>
+        {isLoading && <Image source={loadingGif} style={styles.loadingGif} />}
         <OpenButton interactionData={interactionData} interactionType="current" />
       </ScrollView>
       <Text style={styles.searchText}>Searched: <Text style={styles.searchedText}>{searchedDrugData.name}</Text></Text>
       <ScrollView style={styles.scrollViewSearched}>
+        {isLoading && <Image source={loadingGif} style={styles.loadingGif} />}
         <OpenButton interactionData={interactionData} interactionType="searched" />
       </ScrollView>
     </View>
@@ -82,5 +84,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#008777',
     fontWeight: 'bold',
+  },
+  loadingGif: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 70,
+    width: 70,
+    marginLeft: 170,
   },
 });

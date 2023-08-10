@@ -252,7 +252,7 @@ export default function HomeScreen({ navigation }) {
       logo: {
         width: 80,
         height: 80,
-        marginTop: 30,
+        marginTop: 80,
         marginBottom: 80,
       },
     buttonContainer: {

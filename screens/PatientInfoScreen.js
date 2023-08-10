@@ -53,8 +53,8 @@ export default function PatientInfoScreen({navigation, route}) {
                     <View style={styles.patientName}>
                       <Text style={styles.titleText}>{patient.name}</Text>
                     </View>
-                    <TouchableOpacity style={styles.circle} onPress = {handleResetPatientButton}>
-                      <FontAwesome name='times' size={12} color={'white'} />
+                    <TouchableOpacity style={styles.patientCircle} onPress = {handleResetPatientButton}>
+                      <FontAwesome name='times' size={15} color={'white'} />
                     </TouchableOpacity>
                   </View>     
                 </View>           
@@ -296,13 +296,14 @@ const styles = StyleSheet.create({
         alignSelf: "start"
     },
     patientName: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor:'rgba(218,218,218,0.33)',
-        width: 190,
-        height: 40,
+        backgroundColor: 'rgba(218,218,218,0.33)',
+        height: 50,
+        width:150,
         borderRadius: 10,
-        marginBottom: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+        marginBottom: 10,
         marginLeft: 20,
         },
         circle: {
@@ -314,6 +315,17 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             marginRight: 5,
             marginTop:15,
+            marginLeft: 10
+          },
+          patientCircle: {
+            width: 20,
+            height: 20,
+            backgroundColor: '#DE6969',
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 5,
+            marginTop:65,
             marginLeft: 10
           },
     patientTreatment: {
