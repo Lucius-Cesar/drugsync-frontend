@@ -6,6 +6,7 @@ import Treatment from '../components/Treatment';
 import Pathology from '../components/Pathology';
 import {addDrugToCurrentTreatment, addPathology} from '../reducers/patient';
 import loadingGif from '../assets/Spinner.gif';
+import { resetPatientReducer } from '../reducers/patient';
 
 
 export default function PatientInfoScreen({navigation, route}) {
@@ -41,7 +42,25 @@ export default function PatientInfoScreen({navigation, route}) {
     const patient = useSelector((state) => state.patient.value);
 
     
-    function displayTextInputIfNewPatient(){
+    function displaySelectedPatient(){
+        function handleResetPatientButton(){
+            dispatch(resetPatientReducer())
+          }
+        if(patient.name){
+            return(
+                <View style = {styles.selectedPatientContainer}>
+                  <View style = {styles.patientNameContainer}>
+                    <View style={styles.patientName}>
+                      <Text style={styles.titleText}>{patient.name}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.circle} onPress = {handleResetPatientButton}>
+                      <FontAwesome name='times' size={12} color={'white'} />
+                    </TouchableOpacity>
+                  </View>     
+                </View>           
+              )
+
+        }
         if(!patient.name){
             return(
                 <View>
@@ -56,13 +75,6 @@ export default function PatientInfoScreen({navigation, route}) {
                 />
                 {patientNameError && <Text style={styles.error}>Please enter a patient name.</Text>}
                 </View>
-            )
-        }
-        else{
-            return(
-            <View style={styles.patientName}>
-                <Text style={styles.titleText}>{patient.name}</Text>
-            </View>
             )
         }
     }
@@ -122,14 +134,14 @@ export default function PatientInfoScreen({navigation, route}) {
 
     function handleValidateBtn(){
 
-        if (!patientNameInput) {
-            setIsLoading(false);
-            setPatientNameError(true);
-            return;
-        }
 
         setIsLoading(true);
-        if(!patient.name){            
+        if(!patient.name){    
+            if (!patientNameInput) {
+                setIsLoading(false);
+                setPatientNameError(true);
+                return;
+            }        
             fetch(("https://drugsync-backend.vercel.app/patients"),
             {
                 method: "POST",
@@ -226,7 +238,7 @@ export default function PatientInfoScreen({navigation, route}) {
     
     return(
         <View style={styles.container}>
-            {displayTextInputIfNewPatient()}
+            {displaySelectedPatient()}
             <View style={styles.patientTreatment}>
                 <Text style={styles.titleText}>Patient current treatment</Text>
             </View>
@@ -276,6 +288,13 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
     },
+    selectedPatientContainer:{
+        marginTop: 20,
+    },
+    patientNameContainer: {
+        flexDirection: "row",
+        alignSelf: "start"
+    },
     patientName: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -284,9 +303,19 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 10,
         marginBottom: 20,
-        marginTop: 50,
         marginLeft: 20,
         },
+        circle: {
+            width: 15,
+            height: 15,
+            backgroundColor: '#DE6969',
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 5,
+            marginTop:15,
+            marginLeft: 10
+          },
     patientTreatment: {
         alignItems: 'center',
         justifyContent: 'center',

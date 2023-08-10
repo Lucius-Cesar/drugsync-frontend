@@ -29,7 +29,7 @@ export const patientSlice = createSlice({
         state.value.pathologies = state.value.pathologies.filter(pathology => pathology.name !== action.payload)
     },
     resetPatientReducer: (state, action) => {
-      state.value = initialState
+      state.value = initialState.value
     }
   },
 });
