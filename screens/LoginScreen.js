@@ -84,57 +84,67 @@ export default function LoginScreen({ navigation }) {
   
   function handleSignIn() {
     setIdError(false);
-    fetch("https://drugsync-backend.vercel.app/users/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mail: signInEmail,
-        password: signInPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(login({ email: signInEmail, token: data.token }));
-          setSignInEmail("");
-          setSignInPassword("");
-          navigation.navigate("TabNavigator");
-        }
-        else{
-          console.log(data.error)
-          setIdError(data.error);
-        }
-      });
+    if(EMAIL_REGEX.test(signInEmail)){
+      fetch("https://drugsync-backend.vercel.app/users/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mail: signInEmail,
+          password: signInPassword,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(login({ email: signInEmail, token: data.token }));
+            setSignInEmail("");
+            setSignInPassword("");
+            navigation.navigate("TabNavigator");
+          }
+          else{
+            console.log(data.error)
+            setIdError(data.error);
+          }
+        });
+      }
+      else{
+        setSignInEmailError(true)
+      }
   }
 
   const handleSignUp = () => {
-    fetch("https://drugsync-backend.vercel.app/users/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstname: signUpFirstName,
-        lastname: signUpLastName,
-        mail: signUpEmail,
-        password: signUpPassword,
-        adress: signUpAdress,
-        profession: signUpProfession,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.result) {
-          dispatch(login({ email: signUpEmail, token: data.token }));
-          setSignUpFirstName("");
-          setSignUpLastName("");
-          setSignUpEmail("");
-          setsignUpPassword("");
-          setSignUpAdress("");
-          setSignUpProfession("");
-          setVisible(false);
-          navigation.navigate("TabNavigator");
-        }
-      });
+    if(EMAIL_REGEX.test(signUpEmail)){
+      fetch("https://drugsync-backend.vercel.app/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstname: signUpFirstName,
+          lastname: signUpLastName,
+          mail: signUpEmail,
+          password: signUpPassword,
+          adress: signUpAdress,
+          profession: signUpProfession,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.result) {
+            dispatch(login({ email: signUpEmail, token: data.token }));
+            setSignUpFirstName("");
+            setSignUpLastName("");
+            setSignUpEmail("");
+            setsignUpPassword("");
+            setSignUpAdress("");
+            setSignUpProfession("");
+            setVisible(false);
+            navigation.navigate("TabNavigator");
+          }
+        });
+      }
+      else{
+        setSignUpEmailError(true)
+      }
   };
 
   return (
