@@ -220,9 +220,9 @@ export default function HomeScreen({ navigation }) {
       color: '#163232',
     },
     selectedPatientContainer: {
-      flexDirection: "column",
-      alignSelf: "start",
+      alignSelf: 'flex-start',
       marginLeft: 20,
+      marginTop: 20,
     },
     patientNameContainer: {
       flexDirection: "row",
@@ -252,8 +252,8 @@ export default function HomeScreen({ navigation }) {
       logo: {
         width: 80,
         height: 80,
-        marginTop: 40,
-        marginBottom: 100,
+        marginTop: 30,
+        marginBottom: 80,
       },
     buttonContainer: {
       flexDirection: 'row',

@@ -39,21 +39,28 @@ export default function Patient(props) {
     }
 
     return(
+        <>
+        <View style={styles.container}>
         <TouchableOpacity style = {styles.patientContainer} onPress = {handlePatientPress}>
-
         <Text style ={styles.nameText}>
         {props.name}
         </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.circle} onPress = {handleDeletePatient}>
-            <FontAwesome name='times' size={12} color={'white'} />
+        <FontAwesome name='times' size={15} color={'white'} />
         </TouchableOpacity>
-
-        </TouchableOpacity>
+        </View>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
 
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     patientContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -78,6 +85,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 5,
+        marginLeft: 10,
       },
   
   })
