@@ -19,7 +19,7 @@ export default function InteractionScreen({navigation, route}) {
 
   useEffect(() => {
       const patientCurrentTreatmentRxcuiJoin = patient.currentTreatment.map(drug => drug.rxcui).join("+")
-      const url = `https://drugsync-backend-p4qdt6w2w-lucius-cesar.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
+      const url = `https://drugsync-backend.vercel.app/interactions/${patientCurrentTreatmentRxcuiJoin}/${searchedDrugData.rxNav[0].rxcui}`
       setIsLoading(true);
       fetch(url)
       .then(response => response.json())
