@@ -2,11 +2,18 @@ import {View, Text, TextInput, TouchableOpacity, Image, StyleSheet} from 'react-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
 import PathologySearchModal from "../components/PathologySearchModal";
+import InteractionContainer from "../components/InteractionContainer";
 import loadingGif from '../assets/Spinner.gif';
 import { useDispatch, useSelector } from "react-redux";
+import { resetPatientReducer } from '../reducers/patient';
+
+
 
 
 export default function HomeScreen({ navigation }) {
+    //redux Patient
+    const patient = useSelector((state) => state.patient.value);
+    const dispatch = useDispatch()
 
     //Loading state
     const [isLoading, setIsLoading] = useState(false);
@@ -53,9 +60,6 @@ export default function HomeScreen({ navigation }) {
 
     //pathology research states
     const [visible, setVisible] = useState(false)
-
-    //redux Patient
-    const patient = useSelector((state) => state.patient.value);
     
     const handleVisible = () => {
      setVisible(!visible)
@@ -110,21 +114,34 @@ export default function HomeScreen({ navigation }) {
         }
 })
 
+
     }
     }
-    function displayPatientName(){
+    function displaySelectedPatientContainer(){
+      function handleResetPatientButton(){
+        dispatch(resetPatientReducer())
+      }
       if(patient.name){
           return(
-            <View style={styles.patientName}>
-              <Text style={styles.titleText}>{patient.name}</Text>
+            <View style = {styles.selectedPatientContainer}>
+              <View style = {styles.patientNameContainer}>
+                <View style={styles.patientName}>
+                  <Text style={styles.titleText}>{patient.name}</Text>
+                </View>
+                <TouchableOpacity style={styles.circle} onPress = {handleResetPatientButton}>
+                  <FontAwesome name='times' size={12} color={'white'} />
+                </TouchableOpacity>
+              </View>
+              <InteractionContainer/>
             </View>
+            
           )
       }
 
   }
     return (
       <View style={styles.container}>
-        {displayPatientName()}
+        {displaySelectedPatientContainer()}
             <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode='contain'/>
             <PathologySearchModal isVisible = {visible} 
             handleVisible = {handleVisible} 
@@ -202,21 +219,40 @@ export default function HomeScreen({ navigation }) {
       fontWeight: 'bold',
       color: '#163232',
     },
-    patientName: {
+    selectedPatientContainer: {
+      flexDirection: "column",
       alignSelf: "start",
+      marginLeft: 20,
+    },
+    patientNameContainer: {
+      flexDirection: "row",
+      marginTop: 20,
+      alignSelf: "start"
+    },
+    patientName: {
       alignItems: "center",
       justifyContent: 'center',
       backgroundColor:'rgba(218,218,218,0.33)',
       width: 150,
       height: 40,
       borderRadius: 10,
-      marginTop: 50,
-      marginLeft: 20,
+      marginTop: 0,
+      },
+      circle: {
+        width: 15,
+        height: 15,
+        backgroundColor: '#DE6969',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 5,
+        marginTop:15,
+        marginLeft: 10
       },
       logo: {
         width: 80,
         height: 80,
-        marginTop: 100,
+        marginTop: 40,
         marginBottom: 100,
       },
     buttonContainer: {
