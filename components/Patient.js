@@ -10,8 +10,16 @@ export default function Patient(props) {
         fetch(`https://drugsync-backend.vercel.app/patients/${props.name}`)
         .then(response => response.json())
         .then(data => {
-                dispatch(loadPatientInfo(data.infoPatients))
-                props.navigation.navigate("Home")
+            data.infoPatients.currentTreatment = data.infoPatients.currentTreatment.map(treatment => {
+                
+                return {
+                    name: treatment.name,                 
+                    rxcui: treatment.rxNav[0].rxcui           
+                };
+            });
+            
+            dispatch(loadPatientInfo(data.infoPatients))
+            props.navigation.navigate("Home")
         })
     }
 
@@ -26,7 +34,6 @@ export default function Patient(props) {
         .then(response => response.json())
         .then(
             data => { 
-                console.log(data)
                 if(data.delete){
                 console.log(`Patient ${props.name} deleted`)
             }
